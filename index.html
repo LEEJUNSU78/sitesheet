@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>현장 사진대지 자동생성기 ver 1.1.8</title>
+  <!-- 
+    =======================================================
+    현장 사진대지 자동생성기 ver 1.1.8 (GitHub 공식 배포용)
+    Created by 쑤야
+    Copyright (c) 2026 쑤야. All Rights Reserved.
+    무단 복제, 무단 전재, 소스코드 임의 변조 및 상업적 편집을 금합니다.
+    =======================================================
+  -->
+  <!-- ExcelJS & FileSaver 라이브러리 (브라우저 단독 실행) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+  <style>
+    :root {
+      --primary: #1e40af;
+      --primary-hover: #1d4ed8;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --border: #e2e8f0;
+      --text: #1e293b;
+      --text-muted: #64748b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Malgun Gothic", "맑은 고딕", helvetica, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      padding: 24px;
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    header {
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .version-badge {
+      font-size: 0.78rem;
+      background: #2563eb;
+      color: #ffffff;
+      padding: 3px 9px;
+      border-radius: 12px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .author-badge {
+      font-size: 0.75rem;
+      background: #475569;
+      color: #f8fafc;
+      padding: 3px 9px;
+      border-radius: 12px;
+      font-weight: 600;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-top: 4px;
+    }
+
+    .btn-gear {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      width: 38px;
+      height: 38px;
+      font-size: 1.25rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      transition: all 0.2s;
+    }
+
+    .btn-gear:hover {
+      background: #e2e8f0;
+      transform: rotate(45deg);
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .badge {
+      background: #dbeafe;
+      color: var(--primary);
+      font-size: 0.8rem;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-weight: 600;
+    }
+
+    .grid-settings {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      background: #f8fafc;
+      padding: 16px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .form-group label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #334155;
+    }
+
+    input[type="text"], input[type="date"], input[type="file"], select {
+      padding: 9px 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.9rem;
+      outline: none;
+      background: #fff;
+    }
+
+    input[type="text"]:focus, input[type="date"]:focus, select:focus {
+      border-color: var(--primary);
+    }
+
+    .upload-zone {
+      border: 2px dashed #93c5fd;
+      background: #eff6ff;
+      border-radius: 8px;
+      padding: 28px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .upload-zone:hover, .upload-zone.dragover {
+      background: #dbeafe;
+      border-color: var(--primary);
+    }
+
+    .upload-zone p {
+      font-size: 1.05rem;
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .upload-zone span {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .batch-toolbar {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      background: #f1f5f9;
+      padding: 10px 14px;
+      border-radius: 6px;
+      margin-top: 14px;
+      font-size: 0.85rem;
+      flex-wrap: wrap;
+    }
+
+    .batch-btn {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 600;
+      color: #334155;
+    }
+
+    .batch-btn:hover {
+      background: #e2e8f0;
+    }
+
+    .photo-table-wrapper {
+      overflow-x: auto;
+      margin-top: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+
+    th, td {
+      padding: 10px 8px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      vertical-align: middle;
+    }
+
+    th {
+      background-color: #f1f5f9;
+      font-weight: 600;
+      color: #334155;
+    }
+
+    .drag-handle {
+      cursor: grab;
+      color: #94a3b8;
+      font-size: 1.2rem;
+      text-align: center;
+      user-select: none;
+    }
+
+    tr.dragging {
+      opacity: 0.35;
+      background: #dbeafe;
+    }
+
+    .thumb-preview {
+      width: 75px;
+      height: 50px;
+      object-fit: fill;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      display: block;
+    }
+
+    .btn-delete {
+      background: #fee2e2;
+      color: #b91c1c;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.8rem;
+    }
+
+    .btn-delete:hover {
+      background: #fca5a5;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      transition: 0.2s;
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-hover);
+    }
+
+    .btn-secondary {
+      background-color: #e2e8f0;
+      color: #334155;
+    }
+
+    .btn-secondary:hover {
+      background-color: #cbd5e1;
+    }
+
+    .notice-box {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      color: #166534;
+      padding: 12px 16px;
+      border-radius: 6px;
+      font-size: 0.88rem;
+      margin-bottom: 20px;
+    }
+
+    footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      color: #64748b;
+      font-size: 0.82rem;
+      line-height: 1.6;
+    }
+
+    .copyright-tag {
+      display: inline-block;
+      font-weight: 700;
+      color: #1e3a8a;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <div>
+      <h1>
+        📸 현장 사진대지 자동생성기
+        <span class="version-badge">ver 1.1.8</span>
+        <span class="author-badge">만든이: 쑤야</span>
+      </h1>
+      <p class="subtitle">사진 자동 리사이징(15cm×10cm) · 현장명 일괄 자동 입력 · 엑셀 양식 자동 기억</p>
+    </div>
+    <button class="btn-gear" onclick="openAdminSettings()" title="관리자 설정">⚙️</button>
+  </header>
+
+  <div class="notice-box">
+    🚀 <strong>ver 1.1.8 이용 안내:</strong><br>
+    • <strong>엑셀 양식 영구 저장:</strong> 실제 현장 엑셀 양식(.xlsx)을 1회 첨부하시면 브라우저에 <strong>영구 저장</strong>되어 재접속 시에도 매번 첨부할 필요 없이 자동 유지됩니다.<br>
+    • <strong>인쇄 영역 100% 보존:</strong> 첨부하신 엑셀 원본의 인쇄 영역(Print Area), 페이지 나누기, 행/열 크기, 셀 서식을 100% 그대로 유지하며 사진과 글자만 삽입합니다.<br>
+    • <strong>원클릭 일괄 적용:</strong> 1번 사진의 날짜/내용/공종을 버튼 클릭 한 번으로 모든 사진에 일괄 복사할 수 있습니다.<br>
+    • <strong>사진 자동 맞춤:</strong> 자르지 않고 <strong>15cm × 10cm 규격</strong>으로 자동 리사이징되어 B~I열 셀 틀에 중간 정렬 결속됩니다.
+  </div>
+
+  <!-- 1. 사진대지 엑셀 파일 첨부 & 영구 저장 -->
+  <div class="card">
+    <div class="card-title">
+      <span>1. 사진대지 엑셀 양식 첨부 & 영구 저장</span>
+      <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
+        <button class="batch-btn" style="padding: 4px 10px; font-size: 0.8rem; background: #f1f5f9; color: #334155;" onclick="downloadSavedTemplate()">📥 보관된 양식 다운로드</button>
+        <button class="batch-btn" style="padding: 4px 8px; font-size: 0.78rem; background: #fee2e2; color: #dc2626;" onclick="clearSavedTemplate()">❌ 저장 양식 삭제</button>
+        <span class="badge" id="templateStatus">양식 확인 중...</span>
+      </div>
+    </div>
+    <div class="form-group">
+      <input type="file" id="templateFileInput" accept=".xlsx" onchange="loadExcelTemplate(event)">
+      <span style="font-size: 0.82rem; color: var(--text-muted); margin-top: 4px;">
+        ※ 사용하실 현장 엑셀 양식(.xlsx)을 첨부하시면 <strong>브라우저에 영구 저장</strong>되어 다음 접속 시에도 자동으로 유지됩니다. (새 양식 선택 시 즉시 교체 저장)
+      </span>
+    </div>
+  </div>
+
+  <!-- 2. 현장명 작성 (공사명) - 범용 예시 적용 -->
+  <div class="card">
+    <div class="card-title">
+      <span>2. 현장명 작성 (공사명)</span>
+      <span class="badge">모든 페이지 자동 적용</span>
+    </div>
+    <div class="form-group">
+      <label for="projectNameInput">현장 공사명</label>
+      <input type="text" id="projectNameInput" placeholder="예) XX건설 XX현장" value="">
+      <span style="font-size: 0.8rem; color: var(--text-muted); margin-top: 2px;">
+        ※ 입력하신 현장명은 등록된 모든 사진의 '공 사 명' 셀(D27, D51, D81...)에 일괄 자동 입력됩니다.
+      </span>
+    </div>
+  </div>
+
+  <!-- 3. 셀 위치 설정 (관리자 전용) -->
+  <div class="card" id="settingsCard" style="display: none; border: 2px solid #3b82f6;">
+    <div class="card-title" style="color: #1d4ed8;">
+      <span>🔒 관리자 전용: 적용된 셀 좌표 기준표</span>
+      <span class="badge" style="background: #2563eb; color: #fff;">인증 완료</span>
+    </div>
+    <div class="grid-settings">
+      <div class="form-group">
+        <label>대상 시트명</label>
+        <input type="text" id="targetSheetName" value="사진대지">
+      </div>
+      <div class="form-group">
+        <label>사진 삽입 방식</label>
+        <select id="insertMode">
+          <option value="cellFit" selected>셀 틀에 꽉 채워 중간 정렬 (권장: B~I열 맞춤)</option>
+          <option value="fixedCm">15cm × 10cm 크기 고정 배치 (567×378px)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>사진 끝 열</label>
+        <input type="text" id="colEnd" value="I">
+      </div>
+      <div class="form-group">
+        <label>사진 1 시작 셀</label>
+        <input type="text" id="p1Start" value="B6">
+      </div>
+      <div class="form-group">
+        <label>사진 1 공사명 셀</label>
+        <input type="text" id="p1Proj" value="D27">
+      </div>
+      <div class="form-group">
+        <label>사진 1 날짜 셀</label>
+        <input type="text" id="p1Date" value="H27">
+      </div>
+      <div class="form-group">
+        <label>사진 1 내용 셀</label>
+        <input type="text" id="p1Content" value="D28">
+      </div>
+      <div class="form-group">
+        <label>사진 1 공종 셀</label>
+        <input type="text" id="p1Work" value="H28">
+      </div>
+      <div class="form-group">
+        <label>사진 2 시작 셀</label>
+        <input type="text" id="p2Start" value="B31">
+      </div>
+      <div class="form-group">
+        <label>사진 2 공사명 셀</label>
+        <input type="text" id="p2Proj" value="D51">
+      </div>
+      <div class="form-group">
+        <label>사진 2 날짜 셀</label>
+        <input type="text" id="p2Date" value="H51">
+      </div>
+      <div class="form-group">
+        <label>사진 2 내용 셀</label>
+        <input type="text" id="p2Content" value="D52">
+      </div>
+      <div class="form-group">
+        <label>사진 2 공종 셀</label>
+        <input type="text" id="p2Work" value="H52">
+      </div>
+      <div class="form-group">
+        <label>페이지 간격 (Row Offset)</label>
+        <input type="text" id="pageOffset" value="54">
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. 사진 업로드 및 동적 테이블 영역 -->
+  <div class="card">
+    <div class="card-title">
+      <span>3. 사진 파일 일괄 업로드 및 순서 지정</span>
+      <span class="badge" id="photoCountBadge">0장 등록됨 (최대 100장 지원)</span>
+    </div>
+
+    <div class="upload-zone" id="dropZone" onclick="document.getElementById('photoInput').click()">
+      <p>📁 마우스로 클릭하여 사진들을 일괄 선택하거나, 여기에 사진들을 끌어다 놓으세요</p>
+      <span>(최대 100장까지 다중 선택 지원 · 업로드된 사진 수만큼 슬롯이 생성되며 순서를 바꿀 수 있습니다)</span>
+      <input type="file" id="photoInput" accept="image/*" multiple style="display: none;" onchange="handlePhotoFiles(this.files)">
+    </div>
+
+    <div class="batch-toolbar" id="batchToolbar" style="display: none;">
+      <strong>⚡ 일괄 입력 편의 기능:</strong>
+      <button class="batch-btn" onclick="applyFirstDateToAll()">📅 1번 날짜 전체적용</button>
+      <button class="batch-btn" onclick="applyFirstContentToAll()">📝 1번 내용 전체적용</button>
+      <button class="batch-btn" onclick="applyFirstWorkToAll()">🏷️ 1번 공종 전체적용</button>
+      <button class="batch-btn" onclick="clearAllPhotos()">🗑️ 사진 전체 삭제</button>
+    </div>
+
+    <div class="photo-table-wrapper" id="photoTableWrapper" style="display: none;">
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 40px; text-align: center;">이동</th>
+            <th style="width: 105px;">사진 번호</th>
+            <th style="width: 90px;">미리보기 (15:10)</th>
+            <th style="width: 140px;">날짜 (H셀)</th>
+            <th>내용 (상세 설명, D셀)</th>
+            <th style="width: 160px;">공종 (H셀)</th>
+            <th style="width: 60px; text-align: center;">삭제</th>
+          </tr>
+        </thead>
+        <tbody id="photoTableBody">
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="btn btn-secondary" onclick="clearAllPhotos()">전체 초기화</button>
+    <button class="btn btn-primary" onclick="generateExcel()">📥 완성본 엑셀 다운로드</button>
+  </div>
+
+  <footer>
+    <p>
+      <span class="copyright-tag">프로그램 제작자: 쑤야</span> | <strong>현장 사진대지 자동생성기</strong>
+    </p>
+    <p style="margin-top: 4px; font-size: 0.78rem; color: #94a3b8;">
+      Copyright &copy; 2026 쑤야. All Rights Reserved. 무단 복제, 배포 및 임의 코드 변조/상업적 편집을 금지합니다.
+    </p>
+  </footer>
+</div>
+
+<script>
+  const MAX_PHOTOS = 100;
+  const todayStr = new Date().toISOString().split('T')[0];
+
+  let photoItems = [];
+  let loadedTemplateBuffer = null;
+
+  let adminFailCount = 0;
+  let isAdminUnlocked = false;
+
+  // ⭐ IndexedDB 기반 템플릿 영구 자동 저장/로드 시스템
+  const DB_NAME = 'PhotoSheetDB_Global';
+  const DB_VERSION = 1;
+  const STORE_NAME = 'templateStore';
+
+  function openDB() {
+    return new Promise((resolve, reject) => {
+      const request = indexedDB.open(DB_NAME, DB_VERSION);
+      request.onupgradeneeded = (e) => {
+        const db = e.target.result;
+        if (!db.objectStoreNames.contains(STORE_NAME)) {
+          db.createObjectStore(STORE_NAME, { keyPath: 'id' });
+        }
+      };
+      request.onsuccess = (e) => resolve(e.target.result);
+      request.onerror = (e) => reject(e);
+    });
+  }
+
+  async function saveTemplateToDB(buffer, name) {
+    try {
+      const db = await openDB();
+      const tx = db.transaction(STORE_NAME, 'readwrite');
+      const store = tx.objectStore(STORE_NAME);
+      store.put({ id: 'savedTemplate', buffer: buffer, name: name });
+    } catch (err) {
+      console.warn('템플릿 자동저장 실패:', err);
+    }
+  }
+
+  async function loadTemplateFromDB() {
+    const statusBadge = document.getElementById('templateStatus');
+    try {
+      const db = await openDB();
+      const tx = db.transaction(STORE_NAME, 'readonly');
+      const store = tx.objectStore(STORE_NAME);
+      const req = store.get('savedTemplate');
+      req.onsuccess = () => {
+        if (req.result && req.result.buffer) {
+          loadedTemplateBuffer = req.result.buffer;
+          statusBadge.textContent = `✅ 고정 양식 보관됨 (${req.result.name})`;
+          statusBadge.style.background = '#dcfce7';
+          statusBadge.style.color = '#15803d';
+        } else {
+          statusBadge.textContent = '⚠️ 양식 미등록 (엑셀 파일을 첨부하세요)';
+          statusBadge.style.background = '#fef3c7';
+          statusBadge.style.color = '#92400e';
+        }
+      };
+    } catch (err) {
+      statusBadge.textContent = '⚠️ 양식 미등록 (엑셀 파일을 첨부하세요)';
+      statusBadge.style.background = '#fef3c7';
+      statusBadge.style.color = '#92400e';
+    }
+  }
+
+  function loadExcelTemplate(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      loadedTemplateBuffer = e.target.result;
+      const statusBadge = document.getElementById('templateStatus');
+      statusBadge.textContent = `✅ 고정 양식 보관됨 (${file.name})`;
+      statusBadge.style.background = '#dcfce7';
+      statusBadge.style.color = '#15803d';
+
+      saveTemplateToDB(loadedTemplateBuffer, file.name);
+      alert(`✅ '${file.name}' 양식이 브라우저에 영구 저장되었습니다.\n다음 접속 시에도 자동으로 유지됩니다.`);
+    };
+    reader.readAsArrayBuffer(file);
+  }
+
+  // 저장된 엑셀 양식 삭제 (초기화)
+  async function clearSavedTemplate() {
+    if (!confirm('브라우저에 저장된 엑셀 양식을 삭제하시겠습니까?')) return;
+    try {
+      const db = await openDB();
+      const tx = db.transaction(STORE_NAME, 'readwrite');
+      const store = tx.objectStore(STORE_NAME);
+      store.delete('savedTemplate');
+      loadedTemplateBuffer = null;
+      document.getElementById('templateFileInput').value = '';
+      const statusBadge = document.getElementById('templateStatus');
+      statusBadge.textContent = '⚠️ 양식 미등록 (엑셀 파일을 첨부하세요)';
+      statusBadge.style.background = '#fef3c7';
+      statusBadge.style.color = '#92400e';
+      alert('저장된 엑셀 양식이 초기화되었습니다. 새로운 양식을 첨부해 주세요.');
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  // 보관된 양식 다시 다운로드 받기
+  function downloadSavedTemplate() {
+    if (!loadedTemplateBuffer) {
+      alert('현재 저장된 엑셀 양식이 없습니다. 1번에서 엑셀 양식을 먼저 첨부해 주세요.');
+      return;
+    }
+    const blob = new Blob([loadedTemplateBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    saveAs(blob, '보관된_사진대지_양식.xlsx');
+  }
+
+
+
+  function openAdminSettings() {
+    const card = document.getElementById('settingsCard');
+    if (isAdminUnlocked) {
+      card.style.display = card.style.display === 'none' ? 'block' : 'none';
+      return;
+    }
+
+    let promptMsg = '🔒 관리자 암호를 입력하세요:';
+    if (adminFailCount >= 3) {
+      promptMsg = '🚨 [보안 경고] 암호 3회 오류로 더 이상 입력할 수 없습니다.\n관리자 암호를 입력하세요:';
+    }
+
+    const inputPw = prompt(promptMsg);
+    if (inputPw === null) return;
+
+    const cleanPw = inputPw.replace(/\s+/g, '').toLowerCase();
+    if (cleanPw === '쑤야' || cleanPw === 'ssuya' || cleanPw === 'tndk') {
+      isAdminUnlocked = true;
+      adminFailCount = 0;
+      alert('✅ 관리자 인증 완료! 셀 좌표 및 방식 설정 패널이 해제되었습니다.');
+      card.style.display = 'block';
+    } else {
+      adminFailCount++;
+      if (adminFailCount >= 3) {
+        alert('❌ 암호가 일치하지 않습니다.\n더 이상 입력할 수 없습니다. (보안 잠금)');
+      } else {
+        alert(`❌ 암호가 올바르지 않습니다. (오류 ${adminFailCount}/3회)`);
+      }
+    }
+  }
+
+  const dropZone = document.getElementById('dropZone');
+  ['dragenter', 'dragover'].forEach(name => {
+    dropZone.addEventListener(name, (e) => {
+      e.preventDefault();
+      dropZone.classList.add('dragover');
+    }, false);
+  });
+  ['dragleave', 'drop'].forEach(name => {
+    dropZone.addEventListener(name, (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('dragover');
+    }, false);
+  });
+  dropZone.addEventListener('drop', (e) => {
+    handlePhotoFiles(e.dataTransfer.files);
+  });
+
+  function resizeTo15x10(file, callback) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const img = new Image();
+      img.onload = function() {
+        const canvas = document.createElement('canvas');
+        canvas.width = 1500;
+        canvas.height = 1000;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, 1500, 1000);
+        const resizedDataUrl = canvas.toDataURL('image/jpeg', 0.92);
+        callback(resizedDataUrl);
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function handlePhotoFiles(files) {
+    if (!files || files.length === 0) return;
+
+    const newFiles = Array.from(files).filter(f => f.type.startsWith('image/'));
+    if (newFiles.length === 0) return;
+
+    if (photoItems.length + newFiles.length > MAX_PHOTOS) {
+      alert(`최대 ${MAX_PHOTOS}장까지만 등록 가능합니다. (현재 ${photoItems.length}장 등록됨)`);
+    }
+
+    const availableSlots = MAX_PHOTOS - photoItems.length;
+    const filesToLoad = newFiles.slice(0, availableSlots);
+
+    let loadedCount = 0;
+    filesToLoad.forEach(file => {
+      resizeTo15x10(file, function(resizedBase64) {
+        photoItems.push({
+          id: 'p_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7),
+          file: file,
+          base64: resizedBase64,
+          ext: 'jpeg',
+          date: photoItems.length > 0 ? photoItems[0].date : todayStr,
+          content: '',
+          workType: photoItems.length > 0 ? photoItems[0].workType : ''
+        });
+
+        loadedCount++;
+        if (loadedCount === filesToLoad.length) {
+          renderTable();
+        }
+      });
+    });
+  }
+
+  function renderTable() {
+    const wrapper = document.getElementById('photoTableWrapper');
+    const toolbar = document.getElementById('batchToolbar');
+    const tbody = document.getElementById('photoTableBody');
+    const badge = document.getElementById('photoCountBadge');
+    tbody.innerHTML = '';
+
+    const count = photoItems.length;
+    const totalPages = Math.ceil(count / 2);
+    badge.textContent = `${count} / ${MAX_PHOTOS}장 등록됨 (${totalPages} 페이지)`;
+
+    if (count === 0) {
+      wrapper.style.display = 'none';
+      toolbar.style.display = 'none';
+      return;
+    }
+    wrapper.style.display = 'block';
+    toolbar.style.display = 'flex';
+
+    photoItems.forEach((item, index) => {
+      const tr = document.createElement('tr');
+      tr.draggable = false;
+      tr.dataset.index = index;
+
+      const pageNum = Math.floor(index / 2) + 1;
+      const isOdd = (index % 2 === 0);
+      const posLabel = isOdd ? '상단' : '하단';
+
+      tr.innerHTML = `
+        <td class="drag-handle" title="마우스로 끌어서 순서 변경">☰</td>
+        <td>
+          <span style="font-weight: 700; color: var(--primary);">사진 ${index + 1}</span>
+          <div style="font-size: 0.72rem; color: var(--text-muted);">${pageNum}p ${posLabel}</div>
+        </td>
+        <td><img src="${item.base64}" class="thumb-preview" alt="사진 ${index + 1}"></td>
+        <td>
+          <input type="date" value="${item.date}" style="width: 130px;" onchange="updateItem(${index}, 'date', this.value)">
+        </td>
+        <td>
+          <input type="text" value="${escapeHtml(item.content)}" placeholder="예: 수목 제거 작업 전경" style="width: 95%;" onchange="updateItem(${index}, 'content', this.value)">
+        </td>
+        <td>
+          <input type="text" value="${escapeHtml(item.workType)}" placeholder="예: 수목제거" style="width: 90%;" onchange="updateItem(${index}, 'workType', this.value)">
+        </td>
+        <td style="text-align: center;">
+          <button class="btn-delete" onclick="deleteItem(${index})">삭제</button>
+        </td>
+      `;
+
+      const dragHandle = tr.querySelector('.drag-handle');
+      dragHandle.addEventListener('mousedown', () => {
+        tr.draggable = true;
+      });
+      dragHandle.addEventListener('mouseup', () => {
+        tr.draggable = false;
+      });
+
+      tr.addEventListener('dragstart', handleDragStart);
+      tr.addEventListener('dragover', handleDragOver);
+      tr.addEventListener('drop', handleDrop);
+      tr.addEventListener('dragend', handleDragEnd);
+
+      tbody.appendChild(tr);
+    });
+  }
+
+  function updateItem(index, field, value) {
+    if (photoItems[index]) {
+      photoItems[index][field] = value;
+    }
+  }
+
+  function deleteItem(index) {
+    photoItems.splice(index, 1);
+    renderTable();
+  }
+
+  function clearAllPhotos() {
+    if (photoItems.length === 0) return;
+    if (confirm('등록된 모든 사진을 삭제하시겠습니까?')) {
+      photoItems = [];
+      renderTable();
+    }
+  }
+
+  function applyFirstDateToAll() {
+    if (photoItems.length === 0) return;
+    const firstDate = photoItems[0].date;
+    photoItems.forEach(item => item.date = firstDate);
+    renderTable();
+  }
+
+  function applyFirstContentToAll() {
+    if (photoItems.length === 0) return;
+    const firstContent = photoItems[0].content;
+    photoItems.forEach(item => item.content = firstContent);
+    renderTable();
+  }
+
+  function applyFirstWorkToAll() {
+    if (photoItems.length === 0) return;
+    const firstWork = photoItems[0].workType;
+    photoItems.forEach(item => item.workType = firstWork);
+    renderTable();
+  }
+
+  function escapeHtml(text) {
+    return (text || '').replace(/"/g, '&quot;');
+  }
+
+  let draggedRowIndex = null;
+  function handleDragStart(e) {
+    draggedRowIndex = Number(this.dataset.index);
+    this.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+  }
+  function handleDragOver(e) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+  }
+  function handleDrop(e) {
+    e.preventDefault();
+    const targetIndex = Number(this.dataset.index);
+    if (draggedRowIndex === null || draggedRowIndex === targetIndex) return;
+
+    const draggedItem = photoItems.splice(draggedRowIndex, 1)[0];
+    photoItems.splice(targetIndex, 0, draggedItem);
+    renderTable();
+  }
+  function handleDragEnd() {
+    this.classList.remove('dragging');
+    this.draggable = false;
+    draggedRowIndex = null;
+  }
+
+  async function generateExcel() {
+    if (photoItems.length === 0) {
+      alert('최소 1장 이상의 사진을 업로드해 주세요.');
+      return;
+    }
+
+    try {
+      if (!loadedTemplateBuffer) {
+        alert('⚠️ 1번에서 사용하실 사진대지 엑셀 양식(.xlsx)을 먼저 첨부해 주세요.\n(1회 첨부하시면 브라우저에 영구 저장되어 다음 접속 시에도 자동으로 유지됩니다)');
+        return;
+      }
+
+      const projectName = document.getElementById('projectNameInput').value.trim();
+      const workbook = new ExcelJS.Workbook();
+      await workbook.xlsx.load(loadedTemplateBuffer);
+
+      const targetSheetName = document.getElementById('targetSheetName').value.trim();
+      let worksheet = targetSheetName ? workbook.getWorksheet(targetSheetName) : null;
+      if (!worksheet) {
+        worksheet = workbook.worksheets[0];
+      }
+
+      const insertMode = document.getElementById('insertMode').value;
+      const colEndStr = document.getElementById('colEnd').value.trim() || 'I';
+      const pageOffsetVal = parseInt(document.getElementById('pageOffset').value.trim(), 10) || 54;
+
+      const p1Start = document.getElementById('p1Start').value.trim();
+      const p1Proj = document.getElementById('p1Proj').value.trim();
+      const p1Date = document.getElementById('p1Date').value.trim();
+      const p1Content = document.getElementById('p1Content').value.trim();
+      const p1Work = document.getElementById('p1Work').value.trim();
+
+      const p2Start = document.getElementById('p2Start').value.trim();
+      const p2Proj = document.getElementById('p2Proj').value.trim();
+      const p2Date = document.getElementById('p2Date').value.trim();
+      const p2Content = document.getElementById('p2Content').value.trim();
+      const p2Work = document.getElementById('p2Work').value.trim();
+
+      for (let i = 0; i < photoItems.length; i++) {
+        const item = photoItems[i];
+        const isPhotoOdd = (i % 2 === 0);
+        const pageIdx = Math.floor(i / 2);
+        const currentOffset = pageIdx * pageOffsetVal;
+
+        let baseStart = isPhotoOdd ? p1Start : p2Start;
+        let baseProj = isPhotoOdd ? p1Proj : p2Proj;
+        let baseDate = isPhotoOdd ? p1Date : p2Date;
+        let baseContent = isPhotoOdd ? p1Content : p2Content;
+        let baseWork = isPhotoOdd ? p1Work : p2Work;
+
+        const startRow = parseInt(baseStart.replace(/\D/g, ''), 10) + currentOffset;
+        const rowSpan = isPhotoOdd ? 20 : 19;
+        const endRow = startRow + rowSpan;
+
+        const calcCell = (cellRef) => {
+          const c = cellRef.replace(/[0-9]/g, '');
+          const r = parseInt(cellRef.replace(/\D/g, ''), 10) + currentOffset;
+          return `${c}${r}`;
+        };
+
+        if (projectName) {
+          worksheet.getCell(calcCell(baseProj)).value = projectName;
+        }
+
+        if (item.date) worksheet.getCell(calcCell(baseDate)).value = item.date;
+        if (item.content) worksheet.getCell(calcCell(baseContent)).value = item.content;
+        if (item.workType) worksheet.getCell(calcCell(baseWork)).value = item.workType;
+
+        if (item.base64) {
+          const imageId = workbook.addImage({
+            base64: item.base64,
+            extension: 'jpeg',
+          });
+
+          if (insertMode === 'fixedCm') {
+            worksheet.addImage(imageId, {
+              tl: { col: 1, row: startRow - 1 },
+              ext: { width: 567, height: 378 },
+              editAs: 'twoCell'
+            });
+          } else {
+            const photoRangeStr = `B${startRow}:${colEndStr}${endRow}`;
+            worksheet.addImage(imageId, photoRangeStr);
+          }
+        }
+      }
+
+      const buffer = await workbook.xlsx.writeBuffer();
+      const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      saveAs(blob, `현장_사진대지_완성본(ver1.1.8)_${todayStr}.xlsx`);
+
+    } catch (err) {
+      console.error(err);
+      alert('엑셀 생성 중 오류가 발생했습니다:\n' + err.message);
+    }
+  }
+
+  loadTemplateFromDB();
+  renderTable();
+</script>
+
+</body>
+</html>
