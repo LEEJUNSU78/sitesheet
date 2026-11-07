@@ -3,18 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>현장 사진대지 자동생성기 ver 1.1.9</title>
+  <title>현장 사진대지 자동생성기 ver 1.3.0</title>
   <!-- 
     =======================================================
-    현장 사진대지 자동생성기 ver 1.1.9 (GitHub 공식 배포용)
+    현장 사진대지 자동생성기 ver 1.3.0 (GitHub 공식 배포용)
     Created by 쑤야
     Copyright (c) 2026 쑤야. All Rights Reserved.
     무단 복제, 무단 전재, 소스코드 임의 변조 및 상업적 편집을 금합니다.
     =======================================================
   -->
-  <!-- ExcelJS & FileSaver 라이브러리 (브라우저 단독 실행) -->
+  <!-- ExcelJS & FileSaver & Tesseract.js 라이브러리 (브라우저 단독 실행) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
   <style>
     :root {
       --primary: #1e40af;
@@ -353,21 +354,21 @@
   <header>
     <div>
       <h1>
-        📸 현장 사진대지 자동생성기
-        <span class="version-badge">ver 1.1.9</span>
+        현장 사진대지 자동생성기
+        <span class="version-badge">ver 1.3.0</span>
         <span class="author-badge">만든이: 쑤야</span>
       </h1>
-      <p class="subtitle">사진 자동 리사이징(15cm×10cm) · 현장명 일괄 자동 입력 · 엑셀 양식 자동 기억</p>
+      <p class="subtitle">하얀색 보드판 글자 자동인식(일자·내용·공종) · 사진 자동 리사이징(15cm×10cm) · 현장명 일괄 자동 입력 · 엑셀 양식 자동 기억</p>
     </div>
     <button class="btn-gear" onclick="openAdminSettings()" title="관리자 설정">⚙️</button>
   </header>
 
   <div class="notice-box">
-    🚀 <strong>ver 1.1.9 이용 안내:</strong><br>
-    • <strong>사진 비율 선택 (신규):</strong> <code>셀 틀 맞춤</code> / <code>4:3 표준</code> / <code>16:9 와이드</code> 중 원하는 비율을 선택해 왜곡 없이 배치할 수 있습니다.<br>
-    • <strong>엑셀 양식 영구 저장:</strong> 실제 현장 엑셀 양식(.xlsx)을 1회 첨부하시면 브라우저에 <strong>영구 저장</strong>되어 재접속 시에도 매번 첨부할 필요 없이 자동 유지됩니다.<br>
-    • <strong>인쇄 영역 100% 보존:</strong> 첨부하신 엑셀 원본의 인쇄 영역(Print Area), 페이지 나누기, 행/열 크기, 셀 서식을 100% 그대로 유지하며 사진과 글자만 삽입합니다.<br>
-    • <strong>원클릭 일괄 적용:</strong> 1번 사진의 날짜/내용/공종을 버튼 클릭 한 번으로 모든 사진에 일괄 복사할 수 있습니다.
+    <strong>[현장 사진대지 자동생성기 버전별 · 일자별 업데이트 내역]</strong><br>
+    • <strong>ver 1.0.0 (2026-11-05)</strong> : 현장 사진 다중 업로드, 드래그 순서 변경, 일괄 입력 및 표준양식 사진대지 엑셀 자동 생성 최초 구축<br>
+    • <strong>ver 1.1.0 (2026-11-06)</strong> : 사진 종횡비 맞춤(<code>셀 틀 맞춤 15:10</code> / <code>4:3 표준</code> / <code>16:9 와이드</code>) 선택 및 브라우저 엑셀 양식 영구 저장 기능 추가<br>
+    • <strong>ver 1.2.0 (2026-11-06)</strong> : 첨부된 사진 수량에 맞춘 엑셀 시트 인쇄영역(Print Area) 자동 설정 및 관리자 셀 좌표 보호 기능 추가<br>
+    • <strong style="color:#1e40af;">ver 1.3.0 (2026-11-07 · 최신)</strong> : 사진 속 <strong>하얀색 배경 검측 보드판</strong> 글자 자동 인식(OCR)으로 <strong>일자 · 내용 · 공종</strong> 3개 항목 자동 입력 기능 추가
   </div>
 
   <!-- 1. 사진대지 엑셀 파일 첨부 & 영구 저장 -->
@@ -476,7 +477,10 @@
   <div class="card">
     <div class="card-title">
       <span>3. 사진 파일 일괄 업로드 및 순서 지정</span>
-      <span class="badge" id="photoCountBadge">0장 등록됨 (최대 100장 지원)</span>
+      <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+        <span class="badge" id="ocrStatusBadge" style="display:none; background:#fef3c7; color:#b45309; border:1px solid #fde68a;">사진 보드판 글자 인식 준비 중...</span>
+        <span class="badge" id="photoCountBadge">0장 등록됨 (최대 100장 지원)</span>
+      </div>
     </div>
 
     <!-- 📐 사진 삽입 비율 선택 옵션 (체크/라디오) -->
@@ -503,12 +507,13 @@
 
     <div class="upload-zone" id="dropZone" onclick="document.getElementById('photoInput').click()">
       <p>📁 마우스로 클릭하여 사진들을 일괄 선택하거나, 여기에 사진들을 끌어다 놓으세요</p>
-      <span>(최대 100장까지 다중 선택 지원 · 업로드된 사진 수만큼 슬롯이 생성되며 순서를 바꿀 수 있습니다)</span>
+      <span>(최대 100장까지 다중 선택 지원 · 하얀색 배경 보드판 글자(일자·내용·공종) 자동 인식 및 인쇄영역 자동 지정)</span>
       <input type="file" id="photoInput" accept="image/*" multiple style="display: none;" onchange="handlePhotoFiles(this.files)">
     </div>
 
     <div class="batch-toolbar" id="batchToolbar" style="display: none;">
       <strong>⚡ 일괄 입력 편의 기능:</strong>
+      <button type="button" class="batch-btn" onclick="reRunBoardOcrAll()" style="background:#f0fdf4; border-color:#86efac; color:#166534;">사진 보드판 글자 재인식</button>
       <button class="batch-btn" onclick="applyFirstDateToAll()">📅 1번 날짜 전체적용</button>
       <button class="batch-btn" onclick="applyFirstContentToAll()">📝 1번 내용 전체적용</button>
       <button class="batch-btn" onclick="applyFirstWorkToAll()">🏷️ 1번 공종 전체적용</button>
@@ -718,6 +723,7 @@
   function processImageWithRatio(file, ratioMode, callback) {
     const reader = new FileReader();
     reader.onload = function(e) {
+      const origDataUrl = e.target.result;
       const img = new Image();
       img.onload = function() {
         const canvas = document.createElement('canvas');
@@ -747,11 +753,441 @@
         }
 
         const resizedDataUrl = canvas.toDataURL('image/jpeg', 0.92);
-        callback(resizedDataUrl);
+        callback(resizedDataUrl, origDataUrl);
       };
-      img.src = e.target.result;
+      img.src = origDataUrl;
     };
     reader.readAsDataURL(file);
+  }
+
+  // =========================================================================
+  // 사진 속 하얀색 배경 검측 보드판 자동 감지 및 글자 인식 (OCR: 일자 / 내용 / 공종)
+  // =========================================================================
+  let ocrWorkerPromise = null;
+  let ocrQueue = [];
+  let isOcrRunning = false;
+
+  async function getOcrWorker() {
+    if (!window.Tesseract) {
+      throw new Error('Tesseract.js 라이브러리가 로드되지 않았습니다.');
+    }
+    if (!ocrWorkerPromise) {
+      ocrWorkerPromise = Tesseract.createWorker('kor+eng');
+    }
+    return ocrWorkerPromise;
+  }
+
+  function updateOcrStatusBadge(text, isVisible, isDone) {
+    const badge = document.getElementById('ocrStatusBadge');
+    if (!badge) return;
+    if (!isVisible) {
+      badge.style.display = 'none';
+      return;
+    }
+    badge.style.display = 'inline-block';
+    badge.textContent = text;
+    if (isDone) {
+      badge.style.background = '#dcfce7';
+      badge.style.color = '#15803d';
+      badge.style.borderColor = '#86efac';
+    } else {
+      badge.style.background = '#fef3c7';
+      badge.style.color = '#b45309';
+      badge.style.borderColor = '#fde68a';
+    }
+  }
+
+  function detectAndPrepareBoardCanvas(img) {
+    const W = img.naturalWidth || img.width;
+    const H = img.naturalHeight || img.height;
+    const srcCanvas = document.createElement('canvas');
+    srcCanvas.width = W;
+    srcCanvas.height = H;
+    const srcCtx = srcCanvas.getContext('2d');
+    srcCtx.drawImage(img, 0, 0);
+    const imgData = srcCtx.getImageData(0, 0, W, H).data;
+
+    function isWhitePixel(x, y) {
+      const idx = (y * W + x) * 4;
+      const r = imgData[idx], g = imgData[idx + 1], b = imgData[idx + 2];
+      const max = Math.max(r, g, b), min = Math.min(r, g, b);
+      return (r >= 205 && g >= 205 && b >= 205 && (max - min) <= 38);
+    }
+
+    const regions = [
+      { x0: 0, y0: Math.floor(H * 0.45), x1: Math.floor(W * 0.65), y1: H },
+      { x0: Math.floor(W * 0.35), y0: Math.floor(H * 0.45), x1: W, y1: H },
+      { x0: 0, y0: 0, x1: Math.floor(W * 0.65), y1: Math.floor(H * 0.55) },
+      { x0: Math.floor(W * 0.35), y0: 0, x1: W, y1: Math.floor(H * 0.55) }
+    ];
+
+    let bestBox = null;
+    let bestScore = 0;
+
+    for (const reg of regions) {
+      const rw = reg.x1 - reg.x0;
+      const rh = reg.y1 - reg.y0;
+      const rowWhite = new Float32Array(rh);
+      for (let dy = 0; dy < rh; dy++) {
+        let cnt = 0;
+        const y = reg.y0 + dy;
+        for (let dx = 0; dx < rw; dx += 2) {
+          if (isWhitePixel(reg.x0 + dx, y)) cnt++;
+        }
+        rowWhite[dy] = cnt / (rw / 2);
+      }
+      let minDy = rh, maxDy = -1;
+      for (let dy = 0; dy < rh; dy++) {
+        if (rowWhite[dy] > 0.22) {
+          if (dy < minDy) minDy = dy;
+          if (dy > maxDy) maxDy = dy;
+        }
+      }
+      if (maxDy - minDy < 45) continue;
+
+      const by0 = reg.y0 + minDy;
+      const by1 = reg.y0 + maxDy;
+      const bh = by1 - by0 + 1;
+
+      const colWhite = new Float32Array(rw);
+      for (let dx = 0; dx < rw; dx++) {
+        let cnt = 0;
+        const x = reg.x0 + dx;
+        for (let y = by0; y <= by1; y += 2) {
+          if (isWhitePixel(x, y)) cnt++;
+        }
+        colWhite[dx] = cnt / (bh / 2);
+      }
+      let minDx = rw, maxDx = -1;
+      for (let dx = 0; dx < rw; dx++) {
+        if (colWhite[dx] > 0.32) {
+          if (dx < minDx) minDx = dx;
+          if (dx > maxDx) maxDx = dx;
+        }
+      }
+      if (maxDx - minDx < 90) continue;
+
+      const bx0 = reg.x0 + minDx;
+      const bx1 = reg.x0 + maxDx;
+      const bw = bx1 - bx0 + 1;
+
+      let wCnt = 0, dCnt = 0, total = 0;
+      for (let y = by0; y <= by1; y += 2) {
+        for (let x = bx0; x <= bx1; x += 2) {
+          total++;
+          if (isWhitePixel(x, y)) {
+            wCnt++;
+          } else {
+            const idx = (y * W + x) * 4;
+            const lum = 0.299 * imgData[idx] + 0.587 * imgData[idx + 1] + 0.114 * imgData[idx + 2];
+            if (lum < 130) dCnt++;
+          }
+        }
+      }
+      const wRatio = wCnt / total;
+      const dRatio = dCnt / total;
+      if (wRatio > 0.50 && dRatio > 0.02 && (bw * bh) > bestScore) {
+        bestScore = bw * bh;
+        bestBox = { x: bx0, y: by0, w: bw, h: bh };
+      }
+    }
+
+    if (!bestBox) return null;
+
+    const bw = bestBox.w, bh = bestBox.h;
+    const rawCanvas = document.createElement('canvas');
+    rawCanvas.width = bw;
+    rawCanvas.height = bh;
+    const rawCtx = rawCanvas.getContext('2d');
+    rawCtx.drawImage(img, bestBox.x, bestBox.y, bw, bh, 0, 0, bw, bh);
+    const bData = rawCtx.getImageData(0, 0, bw, bh).data;
+
+    function getLum(x, y) {
+      const i = (y * bw + x) * 4;
+      return 0.299 * bData[i] + 0.587 * bData[i + 1] + 0.114 * bData[i + 2];
+    }
+
+    const isHorizLine = new Uint8Array(bh);
+    for (let y = 0; y < bh; y++) {
+      let dark = 0;
+      for (let x = 0; x < bw; x++) {
+        if (getLum(x, y) < 185) dark++;
+      }
+      if (dark / bw > 0.62) isHorizLine[y] = 1;
+    }
+
+    let divX = Math.floor(bw * 0.22);
+    let maxColDark = -1;
+    for (let x = Math.floor(bw * 0.14); x <= Math.floor(bw * 0.38); x++) {
+      let dark = 0;
+      for (let y = 0; y < bh; y++) {
+        if (getLum(x, y) < 185) dark++;
+      }
+      if (dark > maxColDark) {
+        maxColDark = dark;
+        divX = x;
+      }
+    }
+
+    const rowBands = [];
+    let rStart = -1;
+    for (let y = 0; y < bh; y++) {
+      if (!isHorizLine[y]) {
+        if (rStart === -1) rStart = y;
+      } else {
+        if (rStart !== -1 && (y - rStart) >= 12) {
+          rowBands.push({ y0: rStart, y1: y - 1 });
+        }
+        rStart = -1;
+      }
+    }
+    if (rStart !== -1 && (bh - rStart) >= 12) {
+      rowBands.push({ y0: rStart, y1: bh - 1 });
+    }
+
+    if (rowBands.length === 0) {
+      rowBands.push({ y0: 0, y1: bh - 1 });
+    }
+
+    const scale = 3;
+    const rowGap = 28;
+    const colGap = 70;
+    const pad = 28;
+
+    const totalScaledH = rowBands.reduce((acc, b) => acc + (b.y1 - b.y0 + 1) * scale + rowGap, 0) + pad * 2;
+    const totalScaledW = bw * scale + colGap + pad * 2;
+
+    const outCanvas = document.createElement('canvas');
+    outCanvas.width = totalScaledW;
+    outCanvas.height = totalScaledH;
+    const outCtx = outCanvas.getContext('2d');
+    outCtx.fillStyle = '#ffffff';
+    outCtx.fillRect(0, 0, totalScaledW, totalScaledH);
+
+    function drawSubRectUpscaled(sx, sy, sw, sh, dx, dy) {
+      if (sw <= 2 || sh <= 2) return;
+      const tmp = document.createElement('canvas');
+      tmp.width = sw * scale;
+      tmp.height = sh * scale;
+      const tCtx = tmp.getContext('2d');
+      tCtx.imageSmoothingEnabled = true;
+      tCtx.imageSmoothingQuality = 'high';
+      tCtx.drawImage(rawCanvas, sx, sy, sw, sh, 0, 0, sw * scale, sh * scale);
+      const td = tCtx.getImageData(0, 0, tmp.width, tmp.height);
+      const d = td.data;
+      for (let i = 0; i < d.length; i += 4) {
+        const lum = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2];
+        const v = lum < 175 ? Math.max(0, (lum - 55) * 1.35) : 255;
+        d[i] = d[i + 1] = d[i + 2] = v;
+        d[i + 3] = 255;
+      }
+      tCtx.putImageData(td, 0, 0);
+      outCtx.drawImage(tmp, dx, dy);
+    }
+
+    const rowMeta = [];
+    let curY = pad;
+    const splitColOutX = pad + divX * scale + Math.floor(colGap / 2);
+
+    for (const band of rowBands) {
+      const sy = band.y0 + 1;
+      const sh = Math.max(1, (band.y1 - band.y0 + 1) - 2);
+      const lx = 3;
+      const lw = Math.max(1, divX - 5);
+      const vx = divX + 3;
+      const vw = Math.max(1, bw - vx - 3);
+
+      drawSubRectUpscaled(lx, sy, lw, sh, pad, curY);
+      drawSubRectUpscaled(vx, sy, vw, sh, pad + divX * scale + colGap, curY);
+
+      const bandOutH = (band.y1 - band.y0 + 1) * scale;
+      rowMeta.push({
+        outY0: curY - 6,
+        outY1: curY + bandOutH + 6
+      });
+      curY += bandOutH + rowGap;
+    }
+
+    return {
+      canvas: outCanvas,
+      rowMeta: rowMeta,
+      splitColOutX: splitColOutX
+    };
+  }
+
+  function joinKoreanWordsSmart(wordList) {
+    if (!wordList || wordList.length === 0) return '';
+    wordList.sort((a, b) => a.bbox.x0 - b.bbox.x0);
+    let result = '';
+    let prev = null;
+    for (const w of wordList) {
+      const txt = (w.text || '').trim();
+      if (!txt) continue;
+      if (!prev) {
+        result += txt;
+      } else {
+        const gap = w.bbox.x0 - prev.bbox.x1;
+        const prevIsSingleKor = /^[가-힣]$/.test(prev.text.trim());
+        const curIsSingleKor = /^[가-힣]$/.test(txt);
+        const spaceThreshold = (prevIsSingleKor && curIsSingleKor) ? 26 : 15;
+        if (gap > spaceThreshold) {
+          result += ' ' + txt;
+        } else {
+          result += txt;
+        }
+      }
+      prev = w;
+    }
+    return result.trim();
+  }
+
+  function normalizeBoardDateStr(rawVal) {
+    if (!rawVal) return '';
+    const cleaned = rawVal.replace(/\s+/g, '');
+    const mFull = cleaned.match(/(20\d{2})[.\-\/년](\d{1,2})[.\-\/월](\d{1,2})/);
+    if (mFull) {
+      return `${mFull[1]}-${mFull[2].padStart(2, '0')}-${mFull[3].padStart(2, '0')}`;
+    }
+    const mShort = cleaned.match(/(?:^|\D)(\d{2})[.\-\/](\d{1,2})[.\-\/](\d{1,2})(?:\D|$)/);
+    if (mShort) {
+      return `20${mShort[1]}-${mShort[2].padStart(2, '0')}-${mShort[3].padStart(2, '0')}`;
+    }
+    return '';
+  }
+
+  async function extractBoardFieldsFromDataUrl(dataUrl) {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = async function() {
+        try {
+          const prep = detectAndPrepareBoardCanvas(img);
+          if (!prep) {
+            resolve(null);
+            return;
+          }
+          const worker = await getOcrWorker();
+          const ret = await worker.recognize(prep.canvas);
+          const words = (ret && ret.data && ret.data.words) ? ret.data.words : [];
+
+          const parsedRows = prep.rowMeta.map((rm) => {
+            const rowWords = words.filter(w => {
+              const cy = (w.bbox.y0 + w.bbox.y1) / 2;
+              return cy >= rm.outY0 && cy <= rm.outY1;
+            });
+            const labelWords = rowWords.filter(w => ((w.bbox.x0 + w.bbox.x1) / 2) < prep.splitColOutX);
+            const valWords = rowWords.filter(w => ((w.bbox.x0 + w.bbox.x1) / 2) >= prep.splitColOutX);
+            return {
+              label: joinKoreanWordsSmart(labelWords).replace(/\s+/g, ''),
+              value: joinKoreanWordsSmart(valWords)
+            };
+          });
+
+          const extracted = { date: '', content: '', workType: '' };
+
+          for (const r of parsedRows) {
+            const lbl = r.label.replace(/[^가-힣a-zA-Z0-9]/g, '');
+            const val = (r.value || '').replace(/^[|:\-\s]+|[|:\-\s]+$/g, '').trim();
+            if (!val) continue;
+
+            if (!extracted.workType && (lbl.includes('공종') || lbl === '공좀' || lbl === '공중')) {
+              extracted.workType = val;
+              continue;
+            }
+            if (!extracted.content && (lbl.includes('내용') || lbl.includes('검측내용') || lbl.includes('작업내용') || lbl === '내옹' || lbl === '네용')) {
+              extracted.content = val;
+              continue;
+            }
+            if (!extracted.date && (lbl.includes('일자') || lbl.includes('일시') || lbl.includes('날짜') || lbl === '일지')) {
+              const normD = normalizeBoardDateStr(val);
+              if (normD) extracted.date = normD;
+              continue;
+            }
+            if (!extracted.date) {
+              const normD = normalizeBoardDateStr(val);
+              if (normD && !val.includes('STA')) {
+                extracted.date = normD;
+              }
+            }
+          }
+
+          if (parsedRows.length === 6) {
+            if (!extracted.workType && parsedRows[1].value) {
+              extracted.workType = parsedRows[1].value.trim();
+            }
+            if (!extracted.content && parsedRows[3].value) {
+              extracted.content = parsedRows[3].value.trim();
+            }
+            if (!extracted.date && parsedRows[4].value) {
+              const normD = normalizeBoardDateStr(parsedRows[4].value);
+              if (normD) extracted.date = normD;
+            }
+          }
+
+          if (extracted.date || extracted.content || extracted.workType) {
+            resolve(extracted);
+          } else {
+            resolve(null);
+          }
+        } catch (err) {
+          console.warn('사진 보드판 OCR 처리 중 오류:', err);
+          resolve(null);
+        }
+      };
+      img.onerror = () => resolve(null);
+      img.src = dataUrl;
+    });
+  }
+
+  function enqueuePhotoBoardOcr(item) {
+    if (!item) return;
+    item.ocrState = 'pending';
+    ocrQueue.push(item);
+    processOcrQueue();
+  }
+
+  async function processOcrQueue() {
+    if (isOcrRunning) return;
+    if (ocrQueue.length === 0) return;
+
+    isOcrRunning = true;
+    let processedCount = 0;
+
+    while (ocrQueue.length > 0) {
+      const currentItem = ocrQueue.shift();
+      if (!photoItems.includes(currentItem)) continue;
+
+      processedCount++;
+      updateOcrStatusBadge(`사진 보드판 글자 자동인식 중... (남은 사진 ${ocrQueue.length + 1}장)`, true, false);
+      currentItem.ocrState = 'running';
+      renderTable();
+
+      const sourceDataUrl = currentItem.origDataUrl || currentItem.base64;
+      const result = await extractBoardFieldsFromDataUrl(sourceDataUrl);
+
+      if (result) {
+        if (result.date) currentItem.date = result.date;
+        if (result.content) currentItem.content = result.content;
+        if (result.workType) currentItem.workType = result.workType;
+        currentItem.ocrState = 'done';
+      } else {
+        currentItem.ocrState = 'none';
+      }
+      renderTable();
+    }
+
+    isOcrRunning = false;
+    if (processedCount > 0) {
+      updateOcrStatusBadge('사진 보드판 글자 자동입력 완료 (일자·내용·공종)', true, true);
+    }
+  }
+
+  function reRunBoardOcrAll() {
+    if (photoItems.length === 0) {
+      alert('등록된 사진이 없습니다.');
+      return;
+    }
+    ocrQueue = [];
+    photoItems.forEach(item => enqueuePhotoBoardOcr(item));
   }
 
   function handleRatioChange(newRatio) {
@@ -785,16 +1221,20 @@
 
     let loadedCount = 0;
     filesToLoad.forEach(file => {
-      processImageWithRatio(file, currentRatioOption, function(resizedBase64) {
-        photoItems.push({
+      processImageWithRatio(file, currentRatioOption, function(resizedBase64, origDataUrl) {
+        const newItem = {
           id: 'p_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7),
           file: file,
           base64: resizedBase64,
+          origDataUrl: origDataUrl || resizedBase64,
           ext: 'jpeg',
           date: photoItems.length > 0 ? photoItems[0].date : todayStr,
           content: '',
-          workType: photoItems.length > 0 ? photoItems[0].workType : ''
-        });
+          workType: photoItems.length > 0 ? photoItems[0].workType : '',
+          ocrState: 'pending'
+        };
+        photoItems.push(newItem);
+        enqueuePhotoBoardOcr(newItem);
 
         loadedCount++;
         if (loadedCount === filesToLoad.length) {
@@ -818,6 +1258,7 @@
     if (count === 0) {
       wrapper.style.display = 'none';
       toolbar.style.display = 'none';
+      updateOcrStatusBadge('', false, false);
       return;
     }
     wrapper.style.display = 'block';
@@ -832,21 +1273,29 @@
       const isOdd = (index % 2 === 0);
       const posLabel = isOdd ? '상단' : '하단';
 
+      let ocrTagHtml = '';
+      if (item.ocrState === 'running' || item.ocrState === 'pending') {
+        ocrTagHtml = '<div style="font-size:0.68rem; color:#b45309; font-weight:700; margin-top:2px;">[보드판 인식중...]</div>';
+      } else if (item.ocrState === 'done') {
+        ocrTagHtml = '<div style="font-size:0.68rem; color:#15803d; font-weight:700; margin-top:2px;">[보드판 자동입력됨]</div>';
+      }
+
       tr.innerHTML = `
         <td class="drag-handle" title="마우스로 끌어서 순서 변경">☰</td>
         <td>
           <span style="font-weight: 700; color: var(--primary);">사진 ${index + 1}</span>
           <div style="font-size: 0.72rem; color: var(--text-muted);">${pageNum}p ${posLabel}</div>
+          ${ocrTagHtml}
         </td>
         <td><img src="${item.base64}" class="thumb-preview" alt="사진 ${index + 1}"></td>
         <td>
           <input type="date" value="${item.date}" style="width: 130px;" onchange="updateItem(${index}, 'date', this.value)">
         </td>
         <td>
-          <input type="text" value="${escapeHtml(item.content)}" placeholder="예: 수목 제거 작업 전경" style="width: 95%;" onchange="updateItem(${index}, 'content', this.value)">
+          <input type="text" value="${escapeHtml(item.content)}" placeholder="예) 천공장검측" style="width: 95%;" onchange="updateItem(${index}, 'content', this.value)">
         </td>
         <td>
-          <input type="text" value="${escapeHtml(item.workType)}" placeholder="예: 수목제거" style="width: 90%;" onchange="updateItem(${index}, 'workType', this.value)">
+          <input type="text" value="${escapeHtml(item.workType)}" placeholder="예) 터널공" style="width: 90%;" onchange="updateItem(${index}, 'workType', this.value)">
         </td>
         <td style="text-align: center;">
           <button class="btn-delete" onclick="deleteItem(${index})">삭제</button>
@@ -1026,9 +1475,12 @@
         }
       }
 
+      const totalPhotoPages = Math.max(1, Math.ceil(photoItems.length / 2));
+      worksheet.pageSetup.printArea = `A$1:J$${totalPhotoPages * pageOffsetVal}`;
+
       const buffer = await workbook.xlsx.writeBuffer();
       const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-      saveAs(blob, `현장_사진대지_완성본(ver1.1.9)_${todayStr}.xlsx`);
+      saveAs(blob, `현장_사진대지_완성본(ver1.3.0)_${todayStr}.xlsx`);
 
     } catch (err) {
       console.error(err);
