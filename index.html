@@ -346,6 +346,92 @@
       font-weight: 700;
       color: #1e3a8a;
     }
+
+    .mobile-order-btns {
+      display: none;
+      gap: 4px;
+      margin-top: 6px;
+      justify-content: center;
+    }
+    .btn-move {
+      background: #e2e8f0;
+      color: #334155;
+      border: 1px solid #cbd5e1;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .btn-move:disabled {
+      opacity: 0.35;
+      cursor: default;
+    }
+
+    /* 스마트폰/모바일 접속 시 자동 전환 반응형 UI */
+    @media (max-width: 768px) {
+      body { padding: 10px 8px; }
+      header { flex-direction: column; align-items: flex-start; gap: 10px; padding-bottom: 12px; margin-bottom: 14px; }
+      h1 { font-size: 1.2rem; }
+      .card { padding: 14px 12px; margin-bottom: 14px; }
+      .card-title { flex-direction: column; align-items: flex-start; gap: 8px; }
+      .grid-settings { grid-template-columns: 1fr !important; }
+      input[type="text"], input[type="date"], select {
+        font-size: 16px !important;
+        min-height: 42px;
+      }
+      .batch-toolbar { flex-direction: column; align-items: stretch; gap: 6px; }
+      .batch-btn { width: 100%; padding: 10px; font-size: 0.88rem; text-align: center; }
+      .actions { flex-direction: column; gap: 8px; }
+      .actions .btn { width: 100%; justify-content: center; }
+
+      /* 사진대지 테이블 -> 모바일 카드형 레이아웃 자동 전환 */
+      .photo-table-wrapper { border: none; overflow-x: visible; }
+      .photo-table-wrapper table,
+      .photo-table-wrapper thead,
+      .photo-table-wrapper tbody,
+      .photo-table-wrapper th,
+      .photo-table-wrapper td,
+      .photo-table-wrapper tr {
+        display: block;
+        width: 100%;
+      }
+      .photo-table-wrapper thead { display: none; }
+      .photo-table-wrapper tbody tr {
+        background: #ffffff;
+        border: 1px solid #cbd5e1;
+        border-radius: 10px;
+        margin-bottom: 14px;
+        padding: 12px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      }
+      .photo-table-wrapper tbody td {
+        border: none;
+        padding: 6px 0;
+        text-align: left !important;
+      }
+      .photo-table-wrapper tbody td.drag-handle { display: none; }
+      .mobile-order-btns { display: inline-flex; }
+      .photo-table-wrapper tbody td img.thumb-preview {
+        width: 100%;
+        max-width: 260px;
+        height: auto;
+        display: block;
+        margin: 4px auto;
+      }
+      .photo-table-wrapper tbody td[data-label]::before {
+        content: attr(data-label);
+        display: block;
+        font-size: 0.78rem;
+        font-weight: 700;
+        color: #475569;
+        margin-bottom: 4px;
+      }
+      .photo-table-wrapper tbody td input[type="date"],
+      .photo-table-wrapper tbody td input[type="text"] {
+        width: 100% !important;
+      }
+    }
   </style>
 </head>
 <body>
@@ -358,7 +444,7 @@
         <span class="version-badge">ver 1.3.0</span>
         <span class="author-badge">만든이: 쑤야</span>
       </h1>
-      <p class="subtitle">하얀색 보드판 글자 자동인식(일자·내용·공종) · 사진 자동 리사이징(15cm×10cm) · 현장명 일괄 자동 입력 · 엑셀 양식 자동 기억</p>
+      <p class="subtitle">하얀색 보드판 글자 자동인식(일자·위치+내용·공종) · 4:3 표준 비율 기본 적용 · 엑셀 글자 크기 자동 축소 · 모바일 카드 UI 자동 전환</p>
     </div>
     <button class="btn-gear" onclick="openAdminSettings()" title="관리자 설정">⚙️</button>
   </header>
@@ -368,7 +454,7 @@
     • <strong>ver 1.0.0 (2026-11-05)</strong> : 현장 사진 다중 업로드, 드래그 순서 변경, 일괄 입력 및 표준양식 사진대지 엑셀 자동 생성 최초 구축<br>
     • <strong>ver 1.1.0 (2026-11-06)</strong> : 사진 종횡비 맞춤(<code>셀 틀 맞춤 15:10</code> / <code>4:3 표준</code> / <code>16:9 와이드</code>) 선택 및 브라우저 엑셀 양식 영구 저장 기능 추가<br>
     • <strong>ver 1.2.0 (2026-11-06)</strong> : 첨부된 사진 수량에 맞춘 엑셀 시트 인쇄영역(Print Area) 자동 설정 및 관리자 셀 좌표 보호 기능 추가<br>
-    • <strong style="color:#1e40af;">ver 1.3.0 (2026-11-07 · 최신)</strong> : 사진 속 <strong>하얀색 배경 검측 보드판</strong> 글자 자동 인식(OCR)으로 <strong>일자 · 내용 · 공종</strong> 3개 항목 자동 입력 기능 추가
+    • <strong style="color:#1e40af;">ver 1.3.0 (2026-11-07 · 최신)</strong> : 사진 속 <strong>하얀색 배경 검측 보드판</strong> 글자 자동 인식(OCR: <strong>일자 · 내용(위치+내용) · 공종</strong> 자동 입력), 사진 비율 기본값 <strong>4:3 표준 비율 유지</strong> 지정, 엑셀 셀 폭 초과 시 <strong>글자 크기 자동 축소</strong> 및 <strong>스마트폰 모바일 카드 UI 자동 전환</strong> 기능 추가
   </div>
 
   <!-- 1. 사진대지 엑셀 파일 첨부 & 영구 저장 -->
@@ -491,12 +577,12 @@
       </div>
       <div style="display: flex; gap: 20px; flex-wrap: wrap; font-size: 0.88rem; font-weight: 600;">
         <label style="cursor: pointer; display: flex; align-items: center; gap: 6px;">
-          <input type="radio" name="aspectRatioOption" value="stretch" checked onchange="handleRatioChange(this.value)">
-          <span>🔲 셀 틀에 맞춤 (15:10, 여백 없이 꽉 채움)</span>
+          <input type="radio" name="aspectRatioOption" value="4_3" checked onchange="handleRatioChange(this.value)">
+          <span>📷 4:3 표준 비율 유지 (기본값 · 스마트폰 일반, 중앙 정렬)</span>
         </label>
         <label style="cursor: pointer; display: flex; align-items: center; gap: 6px;">
-          <input type="radio" name="aspectRatioOption" value="4_3" onchange="handleRatioChange(this.value)">
-          <span>📷 4:3 표준 비율 유지 (스마트폰 일반, 중앙 정렬)</span>
+          <input type="radio" name="aspectRatioOption" value="stretch" onchange="handleRatioChange(this.value)">
+          <span>🔲 셀 틀에 맞춤 (15:10, 여백 없이 꽉 채움)</span>
         </label>
         <label style="cursor: pointer; display: flex; align-items: center; gap: 6px;">
           <input type="radio" name="aspectRatioOption" value="16_9" onchange="handleRatioChange(this.value)">
@@ -718,7 +804,30 @@
     handlePhotoFiles(e.dataTransfer.files);
   });
 
-  let currentRatioOption = 'stretch';
+  let currentRatioOption = '4_3';
+
+  // 엑셀 셀 폭에 맞춰 글자 크기(pt)를 자동 축소하는 도우미 함수
+  const _excelMeasureCanvas = document.createElement('canvas');
+  const _excelMeasureCtx = _excelMeasureCanvas.getContext('2d');
+  function setCellValueWithAutoFit(cell, textVal, maxPxWidth, defaultPtSize) {
+    const str = (textVal || '').toString().trim();
+    cell.value = str;
+    if (!str) return;
+    const basePt = defaultPtSize || (cell.font && cell.font.size) || 10.5;
+    let chosenPt = basePt;
+    for (let pt = basePt; pt >= 6.0; pt -= 0.5) {
+      const pxSize = pt * (96 / 72);
+      _excelMeasureCtx.font = `${pxSize}px "Malgun Gothic", "맑은 고딕", sans-serif`;
+      const measuredW = _excelMeasureCtx.measureText(str).width;
+      if (measuredW <= maxPxWidth) {
+        chosenPt = pt;
+        break;
+      }
+      chosenPt = pt;
+    }
+    cell.font = Object.assign({}, cell.font || { name: '맑은 고딕' }, { size: chosenPt });
+    cell.alignment = Object.assign({}, cell.alignment || { vertical: 'middle', horizontal: 'left' }, { shrinkToFit: true });
+  }
 
   function processImageWithRatio(file, ratioMode, callback) {
     const reader = new FileReader();
@@ -1082,7 +1191,7 @@
             };
           });
 
-          const extracted = { date: '', content: '', workType: '' };
+          const extracted = { date: '', location: '', contentDetail: '', content: '', workType: '' };
 
           for (const r of parsedRows) {
             const lbl = r.label.replace(/[^가-힣a-zA-Z0-9]/g, '');
@@ -1093,8 +1202,12 @@
               extracted.workType = val;
               continue;
             }
-            if (!extracted.content && (lbl.includes('내용') || lbl.includes('검측내용') || lbl.includes('작업내용') || lbl === '내옹' || lbl === '네용')) {
-              extracted.content = val;
+            if (!extracted.location && (lbl.includes('위치') || lbl.includes('장소') || lbl.includes('구간') || lbl === '위지' || lbl === '워치')) {
+              extracted.location = val;
+              continue;
+            }
+            if (!extracted.contentDetail && (lbl.includes('내용') || lbl.includes('검측내용') || lbl.includes('작업내용') || lbl === '내옹' || lbl === '네용')) {
+              extracted.contentDetail = val;
               continue;
             }
             if (!extracted.date && (lbl.includes('일자') || lbl.includes('일시') || lbl.includes('날짜') || lbl === '일지')) {
@@ -1114,13 +1227,22 @@
             if (!extracted.workType && parsedRows[1].value) {
               extracted.workType = parsedRows[1].value.trim();
             }
-            if (!extracted.content && parsedRows[3].value) {
-              extracted.content = parsedRows[3].value.trim();
+            if (!extracted.location && parsedRows[2].value) {
+              extracted.location = parsedRows[2].value.trim();
+            }
+            if (!extracted.contentDetail && parsedRows[3].value) {
+              extracted.contentDetail = parsedRows[3].value.trim();
             }
             if (!extracted.date && parsedRows[4].value) {
               const normD = normalizeBoardDateStr(parsedRows[4].value);
               if (normD) extracted.date = normD;
             }
+          }
+
+          if (extracted.location && extracted.contentDetail) {
+            extracted.content = `${extracted.location} ${extracted.contentDetail}`.trim();
+          } else {
+            extracted.content = (extracted.location || extracted.contentDetail || '').trim();
           }
 
           if (extracted.date || extracted.content || extracted.workType) {
@@ -1286,15 +1408,19 @@
           <span style="font-weight: 700; color: var(--primary);">사진 ${index + 1}</span>
           <div style="font-size: 0.72rem; color: var(--text-muted);">${pageNum}p ${posLabel}</div>
           ${ocrTagHtml}
+          <div class="mobile-order-btns">
+            <button type="button" class="btn-move" onclick="movePhotoItem(${index}, -1)" ${index === 0 ? 'disabled' : ''}>▲</button>
+            <button type="button" class="btn-move" onclick="movePhotoItem(${index}, 1)" ${index === photoItems.length - 1 ? 'disabled' : ''}>▼</button>
+          </div>
         </td>
         <td><img src="${item.base64}" class="thumb-preview" alt="사진 ${index + 1}"></td>
-        <td>
+        <td data-label="일자 (자동인식)">
           <input type="date" value="${item.date}" style="width: 130px;" onchange="updateItem(${index}, 'date', this.value)">
         </td>
-        <td>
-          <input type="text" value="${escapeHtml(item.content)}" placeholder="예) 천공장검측" style="width: 95%;" onchange="updateItem(${index}, 'content', this.value)">
+        <td data-label="내용 (위치 + 내용 자동인식)">
+          <input type="text" value="${escapeHtml(item.content)}" placeholder="예) 터널연결횡갱 STA.0+124.8 천공장검측" style="width: 95%;" onchange="updateItem(${index}, 'content', this.value)">
         </td>
-        <td>
+        <td data-label="공종 (자동인식)">
           <input type="text" value="${escapeHtml(item.workType)}" placeholder="예) 터널공" style="width: 90%;" onchange="updateItem(${index}, 'workType', this.value)">
         </td>
         <td style="text-align: center;">
@@ -1327,6 +1453,14 @@
 
   function deleteItem(index) {
     photoItems.splice(index, 1);
+    renderTable();
+  }
+
+  function movePhotoItem(index, dir) {
+    const newIndex = index + dir;
+    if (newIndex < 0 || newIndex >= photoItems.length) return;
+    const item = photoItems.splice(index, 1)[0];
+    photoItems.splice(newIndex, 0, item);
     renderTable();
   }
 
@@ -1449,12 +1583,12 @@
         };
 
         if (projectName) {
-          worksheet.getCell(calcCell(baseProj)).value = projectName;
+          setCellValueWithAutoFit(worksheet.getCell(calcCell(baseProj)), projectName, 210, 10.0);
         }
 
-        if (item.date) worksheet.getCell(calcCell(baseDate)).value = item.date;
-        if (item.content) worksheet.getCell(calcCell(baseContent)).value = item.content;
-        if (item.workType) worksheet.getCell(calcCell(baseWork)).value = item.workType;
+        if (item.date) setCellValueWithAutoFit(worksheet.getCell(calcCell(baseDate)), item.date, 140, 10.5);
+        if (item.content) setCellValueWithAutoFit(worksheet.getCell(calcCell(baseContent)), item.content, 210, 10.5);
+        if (item.workType) setCellValueWithAutoFit(worksheet.getCell(calcCell(baseWork)), item.workType, 140, 10.5);
 
         if (item.base64) {
           const imageId = workbook.addImage({
