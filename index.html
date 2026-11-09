@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>현장 사진대지 자동생성기 ver 1.2.6</title>
+  <title>현장 사진대지 자동생성기 ver 1.2.7</title>
   <!-- 
     =======================================================
-    현장 사진대지 자동생성기 ver 1.2.6 (범용 공개 배포용)
+    현장 사진대지 자동생성기 ver 1.2.7 (범용 공개 배포용)
     Created by 쑤야
     Copyright (c) 2026 쑤야. All Rights Reserved.
     무단 복제, 무단 전재, 소스코드 임의 변조 및 상업적 편집을 금합니다.
@@ -469,16 +469,16 @@
     <div>
       <h1>
         현장 사진대지 자동생성기
-        <span class="version-badge">ver 1.2.6</span>
+        <span class="version-badge">ver 1.2.7</span>
         <span class="author-badge">만든이: 쑤야</span>
       </h1>
-      <p class="subtitle">하얀색 보드판 글자 자동인식(일자·위치+내용·공종) · 사진 90° 회전 · 기본 4:3 비율 유지 · 엑셀 글자 크기 자동 축소 · 모바일 UI 자동 전환</p>
+      <p class="subtitle">하얀색 보드판 글자 자동인식(일자·위치+내용·공종) · 빈 사진(공란) 삽입 · 사진 90° 회전 · 기본 4:3 비율 유지 · 모바일 UI 자동 전환</p>
     </div>
     <button class="btn-gear" onclick="openAdminSettings()" aria-label="관리자 설정">⚙️</button>
   </header>
 
   <div class="notice-box">
-    💡 <strong>이용 안내 (ver 1.2.6):</strong> 1번에서 <strong>[양식 다운로드 (구글 드라이브)]</strong> 후 사진대지 엑셀 양식을 <strong>단 1회만 첨부</strong>하시면 브라우저에 영구 저장(기본값 확정)되며, 사진 업로드 시 <strong>하얀색 배경 검측 보드판 글자(일자 · 위치+내용 · 공종) 자동 인식 · 사진 90° 회전 · 인쇄영역 자동 설정 · 셀 글자 크기 자동 축소 · 스마트폰 카드 UI 자동 전환</strong>이 적용됩니다.
+    💡 <strong>이용 안내 (ver 1.2.7):</strong> 1번에서 <strong>[양식 다운로드 (구글 드라이브)]</strong> 후 사진대지 엑셀 양식을 <strong>단 1회만 첨부</strong>하시면 브라우저에 영구 저장(기본값 확정)되며, 사진 업로드 시 <strong>하얀색 배경 검측 보드판 글자(일자 · 위치+내용 · 공종) 자동 인식 · 빈 사진(공란) 슬롯 삽입 · 사진 90° 회전 · 인쇄영역 자동 설정 · 스마트폰 카드 UI 자동 전환</strong>이 적용됩니다.
   </div>
 
   <!-- 1. 사진대지 엑셀 파일 첨부 & 영구 저장 -->
@@ -604,13 +604,13 @@
       </div>
     </div>
 
-    <!-- 관리자 로그 2: 사진대지 자동생성기 버전별 · 일자별 전체 수정 내역 로그 (ver 1.0.0 ~ ver 1.2.6) -->
+    <!-- 관리자 로그 2: 사진대지 자동생성기 버전별 · 일자별 전체 수정 내역 로그 (ver 1.0.0 ~ ver 1.2.7) -->
     <div style="margin-bottom: 16px; background: #f8fafc; padding: 14px; border-radius: 8px; border: 1px solid #bfdbfe;">
       <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 8px;">
         <span style="font-size: 0.9rem; font-weight: 800; color: #1e3a8a;">
-          [로그 2] 사진대지 자동생성기 버전별 · 일자별 전체 수정 내역 로그 (최초 생성 + 총 26회 수정)
+          [로그 2] 사진대지 자동생성기 버전별 · 일자별 전체 수정 내역 로그 (최초 생성 + 총 27회 수정)
         </span>
-        <span class="badge" style="background: #dbeafe; color: #1e40af;">현재 버전: ver 1.2.6</span>
+        <span class="badge" style="background: #dbeafe; color: #1e40af;">현재 버전: ver 1.2.7</span>
       </div>
       <div style="max-height: 260px; overflow-y: auto; border: 1px solid #cbd5e1; border-radius: 6px; background: #ffffff;">
         <table style="width: 100%; border-collapse: collapse; font-size: 0.8rem;">
@@ -649,7 +649,8 @@
             <tr><td style="text-align:center; padding:6px;">23차 수정</td><td style="text-align:center; font-weight:700;">ver 1.2.3</td><td style="text-align:center;">2026-11-09</td><td>관리자 패널 로그 항목 내에 전체 차수별·버전별·일자별 수정 이력 로그 조회 테이블 탑재</td></tr>
             <tr><td style="text-align:center; padding:6px;">24차 수정</td><td style="text-align:center; font-weight:700;">ver 1.2.4</td><td style="text-align:center;">2026-11-09</td><td>구글 드라이브 양식 다운로드 연동, 구글 시트([사진대지] 탭) 사용자별 생성 로그 실시간 연동([로그] 버튼 토글) 및 톱니바퀴 투명화</td></tr>
             <tr><td style="text-align:center; padding:6px;">25차 수정</td><td style="text-align:center; font-weight:700;">ver 1.2.5</td><td style="text-align:center;">2026-11-09</td><td>관리자 암호 SHA-256 단방향 해시 암호화 및 마스킹 보안 모달창 적용, 로그 조회 관리자 토큰 인증 및 우클릭·F12 소스 열람 차단 보안 강화</td></tr>
-            <tr style="background:#eff6ff;"><td style="text-align:center; padding:6px; font-weight:800; color:#1e40af;">26차 수정</td><td style="text-align:center; font-weight:800; color:#1e40af;">ver 1.2.6</td><td style="text-align:center; font-weight:700;">2026-11-09</td><td style="font-weight:700; color:#1e3a8a;">1번 항목 제목 줄바꿈 방지('영구 저장 · 초기화' 문구 제거) 및 우측 버튼 정렬, 사진 90° 회전([↻ 90° 회전]) 버튼 추가, 현장 공사명 자동 기억 및 다운로드 전 누락 항목 점검 알림 추가</td></tr>
+            <tr><td style="text-align:center; padding:6px;">26차 수정</td><td style="text-align:center; font-weight:700;">ver 1.2.6</td><td style="text-align:center;">2026-11-09</td><td>1번 항목 제목 줄바꿈 방지('영구 저장 · 초기화' 문구 제거) 및 우측 버튼 정렬, 사진 90° 회전([↻ 90° 회전]) 버튼 추가, 현장 공사명 자동 기억 및 다운로드 전 누락 항목 점검 알림 추가</td></tr>
+            <tr style="background:#eff6ff;"><td style="text-align:center; padding:6px; font-weight:800; color:#1e40af;">27차 수정</td><td style="text-align:center; font-weight:800; color:#1e40af;">ver 1.2.7</td><td style="text-align:center; font-weight:700;">2026-11-09</td><td style="font-weight:700; color:#1e3a8a;">빈 사진(공란) 슬롯 삽입 기능([⬜ 빈 사진(공란) 삽입하기] · [+아래 공란]) 추가, 제작자(쑤야) 위변조 감지 시 작동 차단 잠금, 엑셀 파일 속성(만든 이: 쑤야) 자동 각인 및 접속기기 고유 식별코드(ID:XXXX) 기록 추가</td></tr>
           </tbody>
         </table>
       </div>
@@ -755,8 +756,14 @@
       <input type="file" id="photoInput" accept="image/*" multiple style="display: none;" onchange="handlePhotoFiles(this.files)">
     </div>
 
+    <div style="margin-top: 10px; display: flex; justify-content: flex-end; align-items: center; gap: 8px; flex-wrap: wrap;">
+      <span style="font-size: 0.78rem; color: var(--text-muted);">※ 한 페이지(2칸) 중 특정 칸을 비워두려면(예: 1번 사진 · 2번 빈칸 · 3번 사진):</span>
+      <button type="button" class="batch-btn" style="padding: 6px 14px; font-size: 0.84rem; font-weight: 800; background: #f8fafc; color: #334155; border: 1.5px dashed #64748b;" onclick="addBlankPhotoSlot()">⬜ 빈 사진(공란) 삽입하기</button>
+    </div>
+
     <div class="batch-toolbar" id="batchToolbar" style="display: none;">
       <strong>⚡ 일괄 입력 편의 기능:</strong>
+      <button type="button" class="batch-btn" onclick="addBlankPhotoSlot()" style="background:#f8fafc; border-color:#64748b; color:#334155;">⬜ 빈 사진(공란) 삽입</button>
       <button type="button" class="batch-btn" onclick="reRunBoardOcrAll()" style="background:#f0fdf4; border-color:#86efac; color:#166534;">사진 보드판 글자 재인식</button>
       <button class="batch-btn" onclick="applyFirstDateToAll()">📅 1번 날짜 전체적용</button>
       <button class="batch-btn" onclick="applyFirstContentToAll()">📝 1번 내용 전체적용</button>
@@ -790,7 +797,7 @@
 
   <footer>
     <p>
-      <span class="copyright-tag">프로그램 제작자: 쑤야</span> | <strong>현장 사진대지 자동생성기 (ver 1.2.6)</strong>
+      <span class="copyright-tag">프로그램 제작자: 쑤야</span> | <strong>현장 사진대지 자동생성기 (ver 1.2.7)</strong>
     </p>
     <p style="margin-top: 4px; font-size: 0.78rem; color: #94a3b8;">
       Copyright &copy; 2026 쑤야. All Rights Reserved. 무단 복제, 배포 및 임의 코드 변조/상업적 편집을 금지합니다.
@@ -1044,7 +1051,7 @@
 
   function getMergedPhotoLogs() {
     const localLogs = getLocalPhotoLogs().map(item => ({
-      appType: item.appType || '현장 사진대지 (GitHub ver 1.2.6)',
+      appType: item.appType || '현장 사진대지 (GitHub ver 1.2.7)',
       timestamp: formatDisplayPhotoTimestamp(item.timestamp),
       docNo: item.docNo || '-',
       inspector: item.inspector || '-',
@@ -1056,7 +1063,7 @@
       const isNewOrder = String(item.timestamp || '').includes('사진대지') || String(item.timestamp || '').includes('ver');
       if (isNewOrder) {
         return {
-          appType: item.timestamp || '현장 사진대지 (GitHub ver 1.2.6)',
+          appType: item.timestamp || '현장 사진대지 (GitHub ver 1.2.7)',
           timestamp: formatDisplayPhotoTimestamp(item.appType),
           docNo: item.docNo || '-',
           inspector: item.inspector || '-',
@@ -1066,7 +1073,7 @@
         };
       }
       return {
-        appType: item.appType || '현장 사진대지 (GitHub ver 1.2.6)',
+        appType: item.appType || '현장 사진대지 (GitHub ver 1.2.7)',
         timestamp: formatDisplayPhotoTimestamp(item.timestamp),
         docNo: item.docNo || '-',
         inspector: item.inspector || '-',
@@ -1120,7 +1127,7 @@
       const payload = {
         action: 'addLog',
         sheetName: '사진대지',
-        timestamp: entry.appType || '현장 사진대지 (GitHub ver 1.2.6)',
+        timestamp: entry.appType || '현장 사진대지 (GitHub ver 1.2.7)',
         appType: entry.timestamp || '-',
         docNo: entry.docNo || '-',
         inspector: entry.inspector || '-',
@@ -1170,17 +1177,37 @@
     }
   }
 
-  function recordPhotoLog(projectName, photoCount, summaryText) {
+  const DEVICE_FP_KEY = 'suya_device_fp_id_v1';
+  function getDeviceLabelWithId() {
+    const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+    const devType = isMobileDevice ? '모바일' : 'PC';
+    let devId = '';
+    try {
+      devId = localStorage.getItem(DEVICE_FP_KEY) || '';
+      if (!devId || !/^[0-9A-F]{4}$/.test(devId)) {
+        devId = Math.floor(Math.random() * 65536).toString(16).toUpperCase().padStart(4, '0');
+        localStorage.setItem(DEVICE_FP_KEY, devId);
+      }
+    } catch (e) {
+      devId = '0000';
+    }
+    return `${devType} (ID:${devId})`;
+  }
+
+  function recordPhotoLog(projectName, photoCount, summaryText, blankCount) {
     try {
       const logs = getLocalPhotoLogs();
-      const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+      const totalSlots = photoCount + (blankCount || 0);
+      const countText = blankCount > 0
+        ? `사진 ${photoCount}장+공란 ${blankCount}칸 (${Math.ceil(totalSlots / 2)}p)`
+        : `사진 ${photoCount}장 (${Math.ceil(Math.max(1, photoCount) / 2)}p)`;
       const entry = {
-        appType: '현장 사진대지 (GitHub ver 1.2.6)',
+        appType: '현장 사진대지 (GitHub ver 1.2.7)',
         timestamp: formatPhotoLogTimestamp(new Date()),
         docNo: projectName || '현장 사진대지',
-        inspector: `사진 ${photoCount}장 (${Math.ceil(photoCount / 2)}p)`,
+        inspector: countText,
         detail: summaryText || '-',
-        device: isMobileDevice ? '모바일' : 'PC',
+        device: getDeviceLabelWithId(),
         source: getGasWebAppUrl() ? '☁️ 구글 시트 전송' : '로컬 브라우저'
       };
       logs.unshift(entry);
@@ -1327,6 +1354,39 @@
       H4 = (H4 + e) >>> 0; H5 = (H5 + f) >>> 0; H6 = (H6 + g) >>> 0; H7 = (H7 + h) >>> 0;
     }
     return [H0, H1, H2, H3, H4, H5, H6, H7].map(v => v.toString(16).padStart(8, '0')).join('');
+  }
+
+  // =========================================================================
+  // 원본 제작자('쑤야') 위변조 감지 및 무단 수정 시 작동 차단 잠금
+  // =========================================================================
+  const AUTHOR_NAME_HASH = 'd05635a5cd0a7d6a4b04553e3bf5cce3587d370a1cc2f975961d315c9188984f';
+  function verifyAuthorIntegrity() {
+    const expectedAuthor = String.fromCharCode(0xC464, 0xC57C);
+    if (computeSha256Hex(expectedAuthor) !== AUTHOR_NAME_HASH) return false;
+    const authorBadges = document.querySelectorAll('.author-badge');
+    const copyTags = document.querySelectorAll('.copyright-tag');
+    if (authorBadges.length === 0 || copyTags.length === 0) {
+      alert('⚠️ [무단 변조 감지] 원본 제작자(쑤야) 표기가 임의 훼손되어 프로그램 작동이 중지되었습니다.');
+      return false;
+    }
+    let valid = true;
+    authorBadges.forEach(el => {
+      if (!el.textContent || !el.textContent.includes(expectedAuthor)) {
+        el.textContent = '만든이: ' + expectedAuthor;
+        valid = false;
+      }
+    });
+    copyTags.forEach(el => {
+      if (!el.textContent || !el.textContent.includes(expectedAuthor)) {
+        el.textContent = '프로그램 제작자: ' + expectedAuthor;
+        valid = false;
+      }
+    });
+    if (!valid) {
+      alert('⚠️ [무단 변조 감지] 원본 제작자(쑤야) 표기를 임의로 변경할 수 없습니다. 원본 표기로 자동 복구되었습니다.');
+      return false;
+    }
+    return true;
   }
 
   function openAdminSettings() {
@@ -1969,39 +2029,75 @@
   }
 
   function reRunBoardOcrAll() {
-    if (photoItems.length === 0) {
+    const realPhotos = photoItems.filter(item => !item.isBlank);
+    if (realPhotos.length === 0) {
       alert('등록된 사진이 없습니다.');
       return;
     }
     ocrQueue = [];
-    photoItems.forEach(item => enqueuePhotoBoardOcr(item));
+    realPhotos.forEach(item => enqueuePhotoBoardOcr(item));
   }
 
   function handleRatioChange(newRatio) {
     currentRatioOption = newRatio;
-    if (photoItems.length === 0) return;
+    const realPhotos = photoItems.filter(item => !item.isBlank);
+    if (realPhotos.length === 0) return;
 
     let updatedCount = 0;
-    photoItems.forEach(item => {
+    realPhotos.forEach(item => {
       const srcUrl = item.origDataUrl || item.base64;
       if (srcUrl) {
         renderDataUrlWithRatio(srcUrl, currentRatioOption, function(newBase64) {
           item.base64 = newBase64;
           updatedCount++;
-          if (updatedCount === photoItems.length) {
+          if (updatedCount === realPhotos.length) {
             renderTable();
           }
         });
-      } else {
+      } else if (item.file) {
         processImageWithRatio(item.file, currentRatioOption, function(newBase64) {
           item.base64 = newBase64;
           updatedCount++;
-          if (updatedCount === photoItems.length) {
+          if (updatedCount === realPhotos.length) {
             renderTable();
           }
         });
       }
     });
+  }
+
+  // 빈 사진(공란) 슬롯 생성 및 원하는 위치에 삽입
+  function createBlankPhotoSlotObj() {
+    return {
+      id: 'blank_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7),
+      isBlank: true,
+      file: null,
+      base64: '',
+      origDataUrl: '',
+      ext: 'jpeg',
+      date: '',
+      content: '',
+      workType: '',
+      ocrState: 'none'
+    };
+  }
+
+  function addBlankPhotoSlot() {
+    if (photoItems.length >= MAX_PHOTOS) {
+      alert(`최대 ${MAX_PHOTOS}칸까지만 등록 가능합니다.`);
+      return;
+    }
+    photoItems.push(createBlankPhotoSlotObj());
+    renderTable();
+  }
+
+  function insertBlankPhotoSlotAfter(index) {
+    if (photoItems.length >= MAX_PHOTOS) {
+      alert(`최대 ${MAX_PHOTOS}칸까지만 등록 가능합니다.`);
+      return;
+    }
+    photoItems.splice(index + 1, 0, createBlankPhotoSlotObj());
+    renderTable();
   }
 
   function handlePhotoFiles(files) {
@@ -2011,7 +2107,7 @@
     if (newFiles.length === 0) return;
 
     if (photoItems.length + newFiles.length > MAX_PHOTOS) {
-      alert(`최대 ${MAX_PHOTOS}장까지만 등록 가능합니다. (현재 ${photoItems.length}장 등록됨)`);
+      alert(`최대 ${MAX_PHOTOS}장까지만 등록 가능합니다. (현재 ${photoItems.length}칸 등록됨)`);
     }
 
     const availableSlots = MAX_PHOTOS - photoItems.length;
@@ -2020,15 +2116,17 @@
     let loadedCount = 0;
     filesToLoad.forEach(file => {
       processImageWithRatio(file, currentRatioOption, function(resizedBase64, origDataUrl) {
+        const firstReal = photoItems.find(p => !p.isBlank);
         const newItem = {
           id: 'p_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7),
+          isBlank: false,
           file: file,
           base64: resizedBase64,
           origDataUrl: origDataUrl || resizedBase64,
           ext: 'jpeg',
-          date: photoItems.length > 0 ? photoItems[0].date : todayStr,
+          date: firstReal ? firstReal.date : todayStr,
           content: '',
-          workType: photoItems.length > 0 ? photoItems[0].workType : '',
+          workType: firstReal ? firstReal.workType : '',
           ocrState: 'pending'
         };
         photoItems.push(newItem);
@@ -2050,8 +2148,12 @@
     tbody.innerHTML = '';
 
     const count = photoItems.length;
+    const blankCount = photoItems.filter(p => p.isBlank).length;
+    const realCount = count - blankCount;
     const totalPages = Math.ceil(count / 2);
-    badge.textContent = `${count} / ${MAX_PHOTOS}장 등록됨 (${totalPages} 페이지)`;
+    badge.textContent = blankCount > 0
+      ? `사진 ${realCount}장 + 공란 ${blankCount}칸 (${totalPages} 페이지)`
+      : `${count} / ${MAX_PHOTOS}장 등록됨 (${totalPages} 페이지)`;
 
     if (count === 0) {
       wrapper.style.display = 'none';
@@ -2066,48 +2168,77 @@
       const tr = document.createElement('tr');
       tr.draggable = false;
       tr.dataset.index = index;
+      if (item.isBlank) {
+        tr.style.background = '#f8fafc';
+      }
 
       const pageNum = Math.floor(index / 2) + 1;
       const isOdd = (index % 2 === 0);
       const posLabel = isOdd ? '상단' : '하단';
 
-      let ocrTagHtml = '';
-      if (item.ocrState === 'running' || item.ocrState === 'pending') {
-        ocrTagHtml = '<div style="font-size:0.68rem; color:#b45309; font-weight:700; margin-top:2px;">[보드판 인식중...]</div>';
-      } else if (item.ocrState === 'done') {
-        ocrTagHtml = '<div style="font-size:0.68rem; color:#15803d; font-weight:700; margin-top:2px;">[보드판 자동입력됨]</div>';
-      }
+      if (item.isBlank) {
+        tr.innerHTML = `
+          <td class="drag-handle" title="마우스로 끌어서 순서 변경">☰</td>
+          <td>
+            <span style="font-weight: 800; color: #64748b;">⬜ 빈 사진 ${index + 1}</span>
+            <div style="font-size: 0.72rem; color: var(--text-muted);">${pageNum}p ${posLabel} (공란)</div>
+            <div class="mobile-order-btns">
+              <button type="button" class="btn-move" onclick="movePhotoItem(${index}, -1)" ${index === 0 ? 'disabled' : ''}>▲</button>
+              <button type="button" class="btn-move" onclick="movePhotoItem(${index}, 1)" ${index === photoItems.length - 1 ? 'disabled' : ''}>▼</button>
+            </div>
+          </td>
+          <td style="text-align: center;">
+            <div style="width: 75px; height: 50px; border: 1.5px dashed #94a3b8; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 700; color: #64748b; background: #f1f5f9;">빈칸(공란)</div>
+          </td>
+          <td colspan="3" data-label="빈 사진(공란) 안내" style="color: #64748b; font-size: 0.82rem; font-weight: 600;">
+            이 칸(${pageNum}페이지 ${posLabel})은 사진과 텍스트를 비워두고 다음 칸(${index + 2}번)으로 넘어갑니다. (☰ 또는 ▲/▼로 위치 이동 가능)
+          </td>
+          <td style="text-align: center;">
+            <button class="btn-delete" onclick="deleteItem(${index})">삭제</button>
+          </td>
+        `;
+      } else {
+        let ocrTagHtml = '';
+        if (item.ocrState === 'running' || item.ocrState === 'pending') {
+          ocrTagHtml = '<div style="font-size:0.68rem; color:#b45309; font-weight:700; margin-top:2px;">[보드판 인식중...]</div>';
+        } else if (item.ocrState === 'done') {
+          ocrTagHtml = '<div style="font-size:0.68rem; color:#15803d; font-weight:700; margin-top:2px;">[보드판 자동입력됨]</div>';
+        }
 
-      tr.innerHTML = `
-        <td class="drag-handle" title="마우스로 끌어서 순서 변경">☰</td>
-        <td>
-          <span style="font-weight: 700; color: var(--primary);">사진 ${index + 1}</span>
-          <div style="font-size: 0.72rem; color: var(--text-muted);">${pageNum}p ${posLabel}</div>
-          ${ocrTagHtml}
-          <div class="mobile-order-btns">
-            <button type="button" class="btn-move" onclick="movePhotoItem(${index}, -1)" ${index === 0 ? 'disabled' : ''}>▲</button>
-            <button type="button" class="btn-move" onclick="movePhotoItem(${index}, 1)" ${index === photoItems.length - 1 ? 'disabled' : ''}>▼</button>
-          </div>
-        </td>
-        <td style="text-align: center;">
-          <img src="${item.base64}" class="thumb-preview" alt="사진 ${index + 1}">
-          <div style="margin-top: 4px;">
-            <button type="button" class="batch-btn" style="padding: 2px 8px; font-size: 0.72rem; background: #eff6ff; color: #1e40af; border-color: #bfdbfe;" onclick="rotatePhotoItem(${index})" title="사진이 옆으로 누웠을 때 시계방향 90° 회전">↻ 90° 회전</button>
-          </div>
-        </td>
-        <td data-label="일자 (자동인식)">
-          <input type="date" value="${item.date}" style="width: 130px;" onchange="updateItem(${index}, 'date', this.value)">
-        </td>
-        <td data-label="내용 (위치 + 내용 자동인식)">
-          <input type="text" value="${escapeHtml(item.content)}" placeholder="예) 터널연결횡갱 STA.0+124.8 천공장검측" style="width: 95%;" onchange="updateItem(${index}, 'content', this.value)">
-        </td>
-        <td data-label="공종 (자동인식)">
-          <input type="text" value="${escapeHtml(item.workType)}" placeholder="예) 터널공" style="width: 90%;" onchange="updateItem(${index}, 'workType', this.value)">
-        </td>
-        <td style="text-align: center;">
-          <button class="btn-delete" onclick="deleteItem(${index})">삭제</button>
-        </td>
-      `;
+        tr.innerHTML = `
+          <td class="drag-handle" title="마우스로 끌어서 순서 변경">☰</td>
+          <td>
+            <span style="font-weight: 700; color: var(--primary);">사진 ${index + 1}</span>
+            <div style="font-size: 0.72rem; color: var(--text-muted);">${pageNum}p ${posLabel}</div>
+            ${ocrTagHtml}
+            <div class="mobile-order-btns">
+              <button type="button" class="btn-move" onclick="movePhotoItem(${index}, -1)" ${index === 0 ? 'disabled' : ''}>▲</button>
+              <button type="button" class="btn-move" onclick="movePhotoItem(${index}, 1)" ${index === photoItems.length - 1 ? 'disabled' : ''}>▼</button>
+            </div>
+          </td>
+          <td style="text-align: center;">
+            <img src="${item.base64}" class="thumb-preview" alt="사진 ${index + 1}">
+            <div style="margin-top: 4px;">
+              <button type="button" class="batch-btn" style="padding: 2px 8px; font-size: 0.72rem; background: #eff6ff; color: #1e40af; border-color: #bfdbfe;" onclick="rotatePhotoItem(${index})" title="사진이 옆으로 누웠을 때 시계방향 90° 회전">↻ 90° 회전</button>
+            </div>
+          </td>
+          <td data-label="일자 (자동인식)">
+            <input type="date" value="${item.date}" style="width: 130px;" onchange="updateItem(${index}, 'date', this.value)">
+          </td>
+          <td data-label="내용 (위치 + 내용 자동인식)">
+            <input type="text" value="${escapeHtml(item.content)}" placeholder="예) 터널연결횡갱 STA.0+124.8 천공장검측" style="width: 95%;" onchange="updateItem(${index}, 'content', this.value)">
+          </td>
+          <td data-label="공종 (자동인식)">
+            <input type="text" value="${escapeHtml(item.workType)}" placeholder="예) 터널공" style="width: 90%;" onchange="updateItem(${index}, 'workType', this.value)">
+          </td>
+          <td style="text-align: center;">
+            <div style="display: flex; flex-direction: column; gap: 4px; align-items: center;">
+              <button class="btn-delete" onclick="deleteItem(${index})">삭제</button>
+              <button type="button" class="batch-btn" style="padding: 2px 6px; font-size: 0.68rem; background: #f8fafc; color: #475569; border: 1px dashed #94a3b8;" onclick="insertBlankPhotoSlotAfter(${index})" title="이 사진 바로 다음 칸에 빈 사진(공란) 끼워넣기">+아래 공란</button>
+            </div>
+          </td>
+        `;
+      }
 
       const dragHandle = tr.querySelector('.drag-handle');
       dragHandle.addEventListener('mousedown', () => {
@@ -2154,23 +2285,23 @@
   }
 
   function applyFirstDateToAll() {
-    if (photoItems.length === 0) return;
-    const firstDate = photoItems[0].date;
-    photoItems.forEach(item => item.date = firstDate);
+    const firstReal = photoItems.find(p => !p.isBlank);
+    if (!firstReal) return;
+    photoItems.forEach(item => { if (!item.isBlank) item.date = firstReal.date; });
     renderTable();
   }
 
   function applyFirstContentToAll() {
-    if (photoItems.length === 0) return;
-    const firstContent = photoItems[0].content;
-    photoItems.forEach(item => item.content = firstContent);
+    const firstReal = photoItems.find(p => !p.isBlank);
+    if (!firstReal) return;
+    photoItems.forEach(item => { if (!item.isBlank) item.content = firstReal.content; });
     renderTable();
   }
 
   function applyFirstWorkToAll() {
-    if (photoItems.length === 0) return;
-    const firstWork = photoItems[0].workType;
-    photoItems.forEach(item => item.workType = firstWork);
+    const firstReal = photoItems.find(p => !p.isBlank);
+    if (!firstReal) return;
+    photoItems.forEach(item => { if (!item.isBlank) item.workType = firstReal.workType; });
     renderTable();
   }
 
@@ -2204,6 +2335,7 @@
   }
 
   async function generateExcel() {
+    if (!verifyAuthorIntegrity()) return;
     if (photoItems.length === 0) {
       alert('최소 1장 이상의 사진을 업로드해 주세요.');
       return;
@@ -2217,11 +2349,11 @@
 
       const projectName = document.getElementById('projectNameInput').value.trim();
 
-      // 다운로드 전 필수 입력 항목 누락 점검 알림
+      // 다운로드 전 필수 입력 항목 누락 점검 알림 (빈 사진(공란) 슬롯은 제외)
       const missingFields = [];
       if (!projectName) missingFields.push('• 2번 현장 공사명');
-      const emptyContentCount = photoItems.filter(p => !(p.content || '').trim()).length;
-      const emptyWorkCount = photoItems.filter(p => !(p.workType || '').trim()).length;
+      const emptyContentCount = photoItems.filter(p => !p.isBlank && !(p.content || '').trim()).length;
+      const emptyWorkCount = photoItems.filter(p => !p.isBlank && !(p.workType || '').trim()).length;
       if (emptyContentCount > 0) missingFields.push(`• 사진 설명(내용) 미입력 (${emptyContentCount}장)`);
       if (emptyWorkCount > 0) missingFields.push(`• 사진 공종 미입력 (${emptyWorkCount}장)`);
 
@@ -2234,6 +2366,13 @@
 
       const workbook = new ExcelJS.Workbook();
       await workbook.xlsx.load(loadedTemplateBuffer);
+
+      // 엑셀 파일 내부 속성(문서 만든 이 / 마지막 수정한 사람)에 원본 제작자 '쑤야' 영구 각인
+      const authorMark = String.fromCharCode(0xC464, 0xC57C);
+      workbook.creator = authorMark;
+      workbook.lastModifiedBy = authorMark;
+      workbook.created = new Date();
+      workbook.modified = new Date();
 
       const targetSheetName = document.getElementById('targetSheetName').value.trim();
       let worksheet = targetSheetName ? workbook.getWorksheet(targetSheetName) : null;
@@ -2259,6 +2398,10 @@
 
       for (let i = 0; i < photoItems.length; i++) {
         const item = photoItems[i];
+        if (item.isBlank) {
+          // 빈 사진(공란) 슬롯은 해당 칸(상단 또는 하단)을 비워두고 다음 칸으로 넘김
+          continue;
+        }
         const isPhotoOdd = (i % 2 === 0);
         const pageIdx = Math.floor(i / 2);
         const currentOffset = pageIdx * pageOffsetVal;
@@ -2310,14 +2453,17 @@
       worksheet.pageSetup.printArea = `A$1:J$${totalPhotoPages * pageOffsetVal}`;
 
       // 사진대지 생성 로그 기록 (구글 시트 [사진대지] 탭 + 브라우저 로컬)
-      const firstWork = (photoItems[0] && photoItems[0].workType) ? photoItems[0].workType : '';
-      const firstContent = (photoItems[0] && photoItems[0].content) ? photoItems[0].content : '';
+      const firstRealPhoto = photoItems.find(p => !p.isBlank) || photoItems[0];
+      const firstWork = (firstRealPhoto && firstRealPhoto.workType) ? firstRealPhoto.workType : '';
+      const firstContent = (firstRealPhoto && firstRealPhoto.content) ? firstRealPhoto.content : '';
       const summaryForLog = [firstWork, firstContent].filter(Boolean).join(' / ') || '사진대지 생성';
-      recordPhotoLog(projectName || '현장 사진대지', photoItems.length, summaryForLog);
+      const realPhotoCount = photoItems.filter(p => !p.isBlank).length;
+      const blankPhotoCount = photoItems.filter(p => p.isBlank).length;
+      recordPhotoLog(projectName || '현장 사진대지', realPhotoCount, summaryForLog, blankPhotoCount);
 
       const buffer = await workbook.xlsx.writeBuffer();
       const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-      saveAs(blob, `현장_사진대지_완성본(ver1.2.6)_${todayStr}.xlsx`);
+      saveAs(blob, `현장_사진대지_완성본(ver1.2.7)_${todayStr}.xlsx`);
 
     } catch (err) {
       console.error(err);
@@ -2325,6 +2471,7 @@
     }
   }
 
+  verifyAuthorIntegrity();
   restoreLastProjectName();
   loadTemplateFromDB();
   renderTable();
