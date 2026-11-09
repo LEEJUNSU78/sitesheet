@@ -483,7 +483,7 @@
 
   <!-- 1. 사진대지 엑셀 파일 첨부 & 영구 저장 -->
   <div class="card">
-    <div class="card-title" style="display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: nowrap;">
+    <div class="card-title" style="display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap;">
       <span style="white-space: nowrap; flex-shrink: 0;">1. 사진대지 엑셀 양식(.xlsx) 첨부</span>
       <div style="display: flex; gap: 6px; align-items: center; justify-content: flex-end; flex-wrap: wrap; margin-left: auto;">
         <button type="button" class="batch-btn" style="padding: 4px 10px; font-size: 0.78rem; background: #1e40af; color: #ffffff; border-color: #1e40af;" onclick="document.getElementById('templateFileInput').click()">파일 첨부</button>
@@ -1360,9 +1360,11 @@
     }
   }
 
-  // 일반 사용자 우클릭 및 개발자도구(F12 · Ctrl+Shift+I/J/C · Ctrl+U) 차단 가드 (관리자 인증 시 자동 해제)
+  // 일반 사용자 우클릭 및 개발자도구(F12 · Ctrl+Shift+I/J/C · Ctrl+U) 차단 가드 (관리자 인증 시 자동 해제, 모바일 입력창 붙여넣기 허용)
   document.addEventListener('contextmenu', function(e) {
     if (!isAdminUnlocked) {
+      const tag = (e.target && e.target.tagName) ? e.target.tagName.toUpperCase() : '';
+      if (tag === 'INPUT' || tag === 'TEXTAREA') return;
       e.preventDefault();
     }
   });
