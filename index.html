@@ -12,10 +12,10 @@
     무단 복제, 무단 전재, 소스코드 임의 변조 및 상업적 편집을 금합니다.
     =======================================================
   -->
-  <!-- ExcelJS & FileSaver & Tesseract.js 라이브러리 (브라우저 단독 실행) -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+  <!-- ExcelJS & FileSaver & Tesseract.js 라이브러리 (브라우저 단독 실행 · SRI 무결성 해시 검증 적용) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js" integrity="sha384-P7KKlGD3Ng66Ds7oTliLzTnol6DbK+k7PafNYXIBDQ4b5eFWtmqctplDVOxslglR" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js" integrity="sha384-PlRSzpewlarQuj5alIadXwjNUX+2eNMKwr0f07ShWYLy8B6TjEbm7ZlcN/ScSbwy" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js" integrity="sha384-GJqSu7vueQ9qN0E9yLPb3Wtpd7OrgK8KmYzC8T1IysG1bcvxvIO4qtYR/D3A991F" crossorigin="anonymous"></script>
   <style>
     :root {
       --primary: #1e40af;
@@ -519,10 +519,10 @@
     </div>
   </div>
 
-  <!-- 3. 관리자 전용 패널 (구글 연동 설정 · 생성 로그 · 버전별 수정 내역 로그 및 셀 위치 설정) -->
+  <!-- 3. 관리자 전용 패널 (구글 연동 설정 및 셀 위치 설정) -->
   <div class="card" id="settingsCard" style="display: none; border: 2px solid #3b82f6;">
     <div class="card-title" style="color: #1d4ed8;">
-      <span>🔒 관리자 전용: 구글 클라우드 연동 · 생성 로그(시트명: 사진대지) · 버전별 수정 내역 및 셀 좌표 설정</span>
+      <span>🔒 관리자 전용: 구글 클라우드 연동 및 셀 좌표 설정</span>
       <span class="badge" style="background: #2563eb; color: #fff;">인증 완료</span>
     </div>
 
@@ -533,126 +533,24 @@
           <span style="font-size: 0.9rem; font-weight: 800; color: #1e3a8a;">
             ☁️ 구글 클라우드 2종 개별 연동 주소 설정 (① 사진대지 양식 드라이브 / ② 로그수집 시트 [시트명: 사진대지])
           </span>
-          <span class="badge" id="gasConnectionBadge" style="background: #dcfce7; color: #166534; border: 1px solid #86efac;">☁️ 구글 시트(사진대지 탭) 연동 활성화됨</span>
+          <span class="badge" id="gasConnectionBadge" style="background: #dcfce7; color: #166534; border: 1px solid #86efac;">☁️ 구글 시트(사진대지 탭) 단방향 기록 활성화됨</span>
         </div>
         <button type="button" class="batch-btn" style="padding: 4px 12px; font-size: 0.78rem; background: #2563eb; color: #ffffff; border-color: #2563eb;" onclick="saveAndTestPhotoGasUrl()">
-          연동 주소 저장 및 연결 확인
+          연동 주소 저장
         </button>
       </div>
       <div style="display: grid; grid-template-columns: 1fr; gap: 8px; margin-bottom: 6px;">
         <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
           <span style="min-width: 210px; font-size: 0.82rem; font-weight: 800; color: #1e40af;">① 사진대지 양식 (.xlsx) 주소:</span>
-          <input type="text" id="drivePhotoXlsxUrlInput" value="https://docs.google.com/spreadsheets/d/1kvCzjzd66RxBX0uiaGItpJLH02Z5AZEs8HdTKiq9Y3I/edit?usp=sharing" placeholder="구글 드라이브 사진대지 양식 공유 링크 입력" style="flex: 1; min-width: 250px; padding: 6px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.82rem;">
+          <input type="text" id="drivePhotoXlsxUrlInput" value="" placeholder="관리자 인증 시 표시됩니다" style="flex: 1; min-width: 250px; padding: 6px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.82rem;">
         </div>
         <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
           <span style="min-width: 210px; font-size: 0.82rem; font-weight: 800; color: #15803d;">② 로그 수집 시트 (웹앱 주소):</span>
-          <input type="text" id="gasWebAppUrlInput" value="https://script.google.com/macros/s/AKfycbyoLlD0urQGlobf__MOtFDdoMDLcf361cHxzxDhWpwfmS_iyXWuSl0jXU_yUPElQcDg/exec" placeholder="구글 앱스 스크립트 웹 앱 URL 입력" style="flex: 1; min-width: 250px; padding: 6px 10px; border: 1px solid #86efac; border-radius: 6px; font-size: 0.82rem;">
+          <input type="text" id="gasWebAppUrlInput" value="" placeholder="관리자 인증 시 표시됩니다" style="flex: 1; min-width: 250px; padding: 6px 10px; border: 1px solid #86efac; border-radius: 6px; font-size: 0.82rem;">
         </div>
       </div>
       <div style="font-size: 0.76rem; color: #475569;">
-        * 완성본 엑셀 다운로드 시마다 연결된 구글 스프레드시트 내 <strong>[사진대지]</strong> 시트 탭으로 생성 일시 / 공사명 / 공종·내용 요약 / 사진 장수 / 접속 기기가 자동 기록됩니다.
-      </div>
-    </div>
-
-    <!-- [로그 1] 사용자별 사진대지 생성 로그 기록 ([로그] 버튼 클릭 시 표시) -->
-    <div style="margin-bottom: 16px; background: #f8fafc; padding: 14px; border-radius: 8px; border: 1px solid #bfdbfe;">
-      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
-        <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-          <span style="font-size: 0.9rem; font-weight: 800; color: #1e3a8a;">
-            [로그 1] 사용자별 사진대지 생성 로그 기록 (구글 시트 [사진대지] 탭 연동 + 로컬 통합)
-          </span>
-          <span class="badge" id="photoLogCountBadge">총 0건 기록됨</span>
-        </div>
-        <button type="button" class="batch-btn" id="togglePhotoLogBtn" style="padding: 4px 14px; font-size: 0.8rem; font-weight: 800; background: #1e40af; color: #ffffff; border-color: #1e40af;" onclick="togglePhotoLogPanel()">
-          로그
-        </button>
-      </div>
-
-      <div id="photoLogPanelContent" style="display: none; margin-top: 12px; padding-top: 10px; border-top: 1px solid #cbd5e1;">
-        <div style="display: flex; justify-content: flex-end; gap: 6px; flex-wrap: wrap; margin-bottom: 8px;">
-          <button type="button" class="batch-btn" style="padding: 3px 10px; font-size: 0.75rem; background: #dcfce7; color: #166534; border-color: #86efac;" onclick="fetchPhotoLogsFromGoogleSheet(true)">
-            ☁️ 구글 시트(사진대지 탭) 로그 새로고침
-          </button>
-          <button type="button" class="batch-btn" style="padding: 3px 10px; font-size: 0.75rem; background: #eff6ff; color: #1e40af; border-color: #93c5fd;" onclick="exportPhotoLogsCsv()">
-            로그 엑셀(CSV) 다운로드
-          </button>
-          <button type="button" class="batch-btn" style="padding: 3px 10px; font-size: 0.75rem; color: #b91c1c;" onclick="clearPhotoLogs()">
-            로컬 로그 초기화
-          </button>
-        </div>
-        <div style="max-height: 220px; overflow-y: auto; border: 1px solid #cbd5e1; border-radius: 6px; background: #ffffff;">
-          <table style="width: 100%; border-collapse: collapse; font-size: 0.8rem;">
-            <thead>
-              <tr style="background: #f1f5f9; position: sticky; top: 0;">
-                <th style="width: 46px; text-align: center; padding: 7px;">No.</th>
-                <th style="width: 185px; padding: 7px;">프로그램 구분(버전정보)</th>
-                <th style="width: 150px; padding: 7px;">기록일시(년월일시분초)</th>
-                <th style="padding: 7px;">현장 공사명</th>
-                <th style="width: 115px; padding: 7px;">출력 건수</th>
-                <th style="padding: 7px;">첫 사진 공종·내용 요약</th>
-                <th style="width: 80px; text-align: center; padding: 7px;">접속기기</th>
-                <th style="width: 85px; text-align: center; padding: 7px;">구분</th>
-              </tr>
-            </thead>
-            <tbody id="photoLogTableBody">
-              <tr>
-                <td colspan="8" style="text-align: center; color: #64748b; padding: 14px;">아직 생성된 사진대지 로그 기록이 없습니다.</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- 관리자 로그 2: 사진대지 자동생성기 버전별 · 일자별 전체 수정 내역 로그 (ver 1.0.0 ~ ver 1.2.7) -->
-    <div style="margin-bottom: 16px; background: #f8fafc; padding: 14px; border-radius: 8px; border: 1px solid #bfdbfe;">
-      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 8px;">
-        <span style="font-size: 0.9rem; font-weight: 800; color: #1e3a8a;">
-          [로그 2] 사진대지 자동생성기 버전별 · 일자별 전체 수정 내역 로그 (최초 생성 + 총 27회 수정)
-        </span>
-        <span class="badge" style="background: #dbeafe; color: #1e40af;">현재 버전: ver 1.2.7</span>
-      </div>
-      <div style="max-height: 260px; overflow-y: auto; border: 1px solid #cbd5e1; border-radius: 6px; background: #ffffff;">
-        <table style="width: 100%; border-collapse: collapse; font-size: 0.8rem;">
-          <thead>
-            <tr style="background: #eff6ff; position: sticky; top: 0;">
-              <th style="width: 75px; text-align: center; padding: 7px;">차수</th>
-              <th style="width: 90px; text-align: center; padding: 7px;">수정 버전</th>
-              <th style="width: 95px; text-align: center; padding: 7px;">수정 일자</th>
-              <th style="padding: 7px;">수정 내역 상세</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td style="text-align:center; padding:6px;">최초생성</td><td style="text-align:center; font-weight:700;">ver 1.0.0</td><td style="text-align:center;">2026-11-06</td><td>사진 다중 업로드, 드래그 순서 변경, 항목 입력 및 사진대지 엑셀 자동 생성 초안 구축</td></tr>
-            <tr><td style="text-align:center; padding:6px;">1차 수정</td><td style="text-align:center; font-weight:700;">ver 1.0.1</td><td style="text-align:center;">2026-11-06</td><td>사진 1(B6)·사진 2(B31) 셀 좌표 지정 및 기본 슬롯 10장 확장</td></tr>
-            <tr><td style="text-align:center; padding:6px;">2차 수정</td><td style="text-align:center; font-weight:700;">ver 1.0.2</td><td style="text-align:center;">2026-11-06</td><td>2페이지 이후 행 간격(54행 오프셋: 사진 3 B60, 날짜 H81, 내용 D82, 공종 H82) 반영</td></tr>
-            <tr><td style="text-align:center; padding:6px;">3차 수정</td><td style="text-align:center; font-weight:700;">ver 1.0.3</td><td style="text-align:center;">2026-11-06</td><td>사진 가로 폭이 J열로 넘어가지 않도록 B열~I열 범위로 수정</td></tr>
-            <tr><td style="text-align:center; padding:6px;">4차 수정</td><td style="text-align:center; font-weight:700;">ver 1.0.4</td><td style="text-align:center;">2026-11-06</td><td>사진 삽입 시 셀 영역 안에 맞춰지도록 셀 배치(cellFit) 방식 적용</td></tr>
-            <tr><td style="text-align:center; padding:6px;">5차 수정</td><td style="text-align:center; font-weight:700;">ver 1.0.5</td><td style="text-align:center;">2026-11-06</td><td>사진 10장 슬롯 구성 정비 및 1번 날짜/공종 일괄 적용 버튼 추가</td></tr>
-            <tr><td style="text-align:center; padding:6px;">6차 수정</td><td style="text-align:center; font-weight:700;">ver 1.0.6</td><td style="text-align:center;">2026-11-07</td><td>업로드 사진 크기 15cm × 10cm(1500×1000px) 자동 리사이징 및 셀 중간 정렬</td></tr>
-            <tr><td style="text-align:center; padding:6px;">7차 수정</td><td style="text-align:center; font-weight:700;">ver 1.0.7</td><td style="text-align:center;">2026-11-07</td><td>상단 헤더 및 브라우저 탭에 버전 배지(ver 1.0.x) 공식 적용</td></tr>
-            <tr><td style="text-align:center; padding:6px;">8차 수정</td><td style="text-align:center; font-weight:700;">ver 1.0.8</td><td style="text-align:center;">2026-11-07</td><td>공종 기본값 빈칸(예: 수목제거 힌트화) 처리 및 이동 핸들(☰) 전용 드래그 잠금</td></tr>
-            <tr><td style="text-align:center; padding:6px;">9차 수정</td><td style="text-align:center; font-weight:700;">ver 1.0.9</td><td style="text-align:center;">2026-11-07</td><td>검측요청서 문구 삭제, 현장명(공사명) 일괄 입력란 신설, 저작권 보호 문구 추가</td></tr>
-            <tr><td style="text-align:center; padding:6px;">10차 수정</td><td style="text-align:center; font-weight:700;">ver 1.1.0</td><td style="text-align:center;">2026-11-07</td><td>프로그램 제작자 명칭 '쑤야' 공식 반영</td></tr>
-            <tr><td style="text-align:center; padding:6px;">11차 수정</td><td style="text-align:center; font-weight:700;">ver 1.1.1</td><td style="text-align:center;">2026-11-07</td><td>사진 업로드 시에만 행이 나타나는 동적 슬롯 방식 전환 및 최대 100장(50p) 확장</td></tr>
-            <tr><td style="text-align:center; padding:6px;">12차 수정</td><td style="text-align:center; font-weight:700;">ver 1.1.2</td><td style="text-align:center;">2026-11-07</td><td>내용 입력란 예시 힌트에서 '가람길' 단어 삭제</td></tr>
-            <tr><td style="text-align:center; padding:6px;">13차 수정</td><td style="text-align:center; font-weight:700;">ver 1.1.3</td><td style="text-align:center;">2026-11-07</td><td>셀 좌표 설정창을 상단 톱니바퀴(⚙️) 아이콘 및 관리자 암호 인증으로 잠금</td></tr>
-            <tr><td style="text-align:center; padding:6px;">14차 수정</td><td style="text-align:center; font-weight:700;">ver 1.1.4</td><td style="text-align:center;">2026-11-07</td><td>상단 안내 상자에서 관리자 및 암호 관련 문구 비노출 처리</td></tr>
-            <tr><td style="text-align:center; padding:6px;">15차 수정</td><td style="text-align:center; font-weight:700;">ver 1.1.5</td><td style="text-align:center;">2026-11-07</td><td>동부간선 2공구(내부용) / 현장 사진대지(GitHub용) 2종 분리 및 [1번 내용 전체적용] 추가</td></tr>
-            <tr><td style="text-align:center; padding:6px;">16차 수정</td><td style="text-align:center; font-weight:700;">ver 1.1.6</td><td style="text-align:center;">2026-11-07</td><td>브라우저 IndexedDB 기반 엑셀 양식 영구 자동 저장 및 보관 양식 다운로드/삭제 추가</td></tr>
-            <tr><td style="text-align:center; padding:6px;">17차 수정</td><td style="text-align:center; font-weight:700;">ver 1.1.7</td><td style="text-align:center;">2026-11-07</td><td>100장(50페이지) 대용량 사진대지 표준양식 구조 연동</td></tr>
-            <tr><td style="text-align:center; padding:6px;">18차 수정</td><td style="text-align:center; font-weight:700;">ver 1.1.8</td><td style="text-align:center;">2026-11-07</td><td>대용량 양식 멈춤 해결(원본 양식 직접 로드 + 영구 저장) 및 GitHub(sitesheet) 최초 배포</td></tr>
-            <tr><td style="text-align:center; padding:6px;">19차 수정</td><td style="text-align:center; font-weight:700;">ver 1.1.9</td><td style="text-align:center;">2026-11-07</td><td>사진 비율 선택(셀 틀 맞춤 15:10 / 4:3 표준 / 16:9 와이드) 옵션 추가 및 GitHub 배포</td></tr>
-            <tr><td style="text-align:center; padding:6px;">20차 수정</td><td style="text-align:center; font-weight:700;">ver 1.2.0</td><td style="text-align:center;">2026-11-07</td><td>첨부된 사진 장수에 맞춘 엑셀 '사진대지' 시트 인쇄영역(A$1:J$...) 자동 설정</td></tr>
-            <tr><td style="text-align:center; padding:6px;">21차 수정</td><td style="text-align:center; font-weight:700;">ver 1.2.1</td><td style="text-align:center;">2026-11-07</td><td>사진 속 하얀색 배경 검측 보드판 글자 자동 인식(OCR: 일자·내용·공종 자동 입력) 추가</td></tr>
-            <tr><td style="text-align:center; padding:6px;">22차 수정</td><td style="text-align:center; font-weight:700;">ver 1.2.2</td><td style="text-align:center;">2026-11-07</td><td>기본 비율 4:3 유지, 보드판 인식 시 위치+내용 통합 입력, 엑셀 글자 자동 축소 및 모바일 카드 UI 자동 전환</td></tr>
-            <tr><td style="text-align:center; padding:6px;">23차 수정</td><td style="text-align:center; font-weight:700;">ver 1.2.3</td><td style="text-align:center;">2026-11-09</td><td>관리자 패널 로그 항목 내에 전체 차수별·버전별·일자별 수정 이력 로그 조회 테이블 탑재</td></tr>
-            <tr><td style="text-align:center; padding:6px;">24차 수정</td><td style="text-align:center; font-weight:700;">ver 1.2.4</td><td style="text-align:center;">2026-11-09</td><td>구글 드라이브 양식 다운로드 연동, 구글 시트([사진대지] 탭) 사용자별 생성 로그 실시간 연동([로그] 버튼 토글) 및 톱니바퀴 투명화</td></tr>
-            <tr><td style="text-align:center; padding:6px;">25차 수정</td><td style="text-align:center; font-weight:700;">ver 1.2.5</td><td style="text-align:center;">2026-11-09</td><td>관리자 암호 SHA-256 단방향 해시 암호화 및 마스킹 보안 모달창 적용, 로그 조회 관리자 토큰 인증 및 우클릭·F12 소스 열람 차단 보안 강화</td></tr>
-            <tr><td style="text-align:center; padding:6px;">26차 수정</td><td style="text-align:center; font-weight:700;">ver 1.2.6</td><td style="text-align:center;">2026-11-09</td><td>1번 항목 제목 줄바꿈 방지('영구 저장 · 초기화' 문구 제거) 및 우측 버튼 정렬, 사진 90° 회전([↻ 90° 회전]) 버튼 추가, 현장 공사명 자동 기억 및 다운로드 전 누락 항목 점검 알림 추가</td></tr>
-            <tr style="background:#eff6ff;"><td style="text-align:center; padding:6px; font-weight:800; color:#1e40af;">27차 수정</td><td style="text-align:center; font-weight:800; color:#1e40af;">ver 1.2.7</td><td style="text-align:center; font-weight:700;">2026-11-09</td><td style="font-weight:700; color:#1e3a8a;">빈 사진(공란) 슬롯 삽입 기능([⬜ 빈 사진(공란) 삽입하기] · [+아래 공란]) 추가, 제작자(쑤야) 위변조 감지 시 작동 차단 잠금, 엑셀 파일 속성(만든 이: 쑤야) 자동 각인 및 접속기기 고유 식별코드(ID:XXXX) 기록 추가</td></tr>
-          </tbody>
-        </table>
+        * 완성본 엑셀 다운로드 시마다 연결된 구글 스프레드시트 내 <strong>[사진대지]</strong> 시트 탭으로 생성 로그가 단방향 자동 전송됩니다. (보안을 위해 HTML 화면 내 로그 열람은 비활성화되어 있으며 구글 스프레드시트에서만 확인 가능합니다.)
       </div>
     </div>
     <div class="grid-settings">
@@ -834,9 +732,14 @@
   const DB_VERSION = 1;
   const STORE_NAME = 'templateStore';
 
-  const DEFAULT_DRIVE_PHOTO_XLSX_ID = "1kvCzjzd66RxBX0uiaGItpJLH02Z5AZEs8HdTKiq9Y3I";
-  const DEFAULT_DRIVE_PHOTO_XLSX_URL = "https://docs.google.com/spreadsheets/d/1kvCzjzd66RxBX0uiaGItpJLH02Z5AZEs8HdTKiq9Y3I/edit?usp=sharing";
-  const DEFAULT_GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyoLlD0urQGlobf__MOtFDdoMDLcf361cHxzxDhWpwfmS_iyXWuSl0jXU_yUPElQcDg/exec";
+  // 클라우드 기본 식별자 난독화 (HTML 평문 URL 하드코딩 노출 방지)
+  const _G_PHOTO_ID_B64 = "MWt2Q3pqemQ2NlJ4QlgwdWlhR0l0cEpMSDAyWjVBWkVzOEhkVEtpcTlZM0k=";
+  const _G_PHOTO_URL_B64 = "aHR0cHM6Ly9kb2NzLmdvb2dsZS5jb20vc3ByZWFkc2hlZXRzL2QvMWt2Q3pqemQ2NlJ4QlgwdWlhR0l0cEpMSDAyWjVBWkVzOEhkVEtpcTlZM0kvZWRpdD91c3A9c2hhcmluZw==";
+  const _G_GAS_URL_B64 = "aHR0cHM6Ly9zY3JpcHQuZ29vZ2xlLmNvbS9tYWNyb3Mvcy9BS2Z5Y2J5b0xsRDB1clFHbG9iZl9fTU90RkRkb01ETGNmMzYxY0h4enhEaFdwd2ZtU19peVhXdVNsMGpYVV95VVBFbFFjRGcvZXhlYw==";
+
+  const DEFAULT_DRIVE_PHOTO_XLSX_ID = atob(_G_PHOTO_ID_B64);
+  const DEFAULT_DRIVE_PHOTO_XLSX_URL = atob(_G_PHOTO_URL_B64);
+  const DEFAULT_GAS_WEB_APP_URL = atob(_G_GAS_URL_B64);
   const GAS_URL_STORAGE_KEY = 'sitesheet_gas_webapp_url_v1';
   const DRIVE_PHOTO_URL_STORAGE_KEY = 'sitesheet_drive_photo_xlsx_url_v1';
   const PHOTO_LOG_KEY = 'sitesheet_photo_sheet_logs_v1';
@@ -858,11 +761,21 @@
     } catch (e) {}
   }
 
-  let cloudPhotoLogs = [];
-
   function getGasWebAppUrl() {
     const saved = (localStorage.getItem(GAS_URL_STORAGE_KEY) || '').trim();
     return saved || (DEFAULT_GAS_WEB_APP_URL || '').trim();
+  }
+
+  function populateAdminCloudInputs() {
+    if (!isAdminUnlocked) return;
+    const driveInput = document.getElementById('drivePhotoXlsxUrlInput');
+    const gasInput = document.getElementById('gasWebAppUrlInput');
+    if (driveInput && !driveInput.value) {
+      driveInput.value = localStorage.getItem(DRIVE_PHOTO_URL_STORAGE_KEY) || DEFAULT_DRIVE_PHOTO_XLSX_URL;
+    }
+    if (gasInput && !gasInput.value) {
+      gasInput.value = getGasWebAppUrl();
+    }
   }
 
   function extractGoogleDriveFileId(rawUrl, fallbackId) {
@@ -947,9 +860,6 @@
       statusBadge.style.background = '#fef3c7';
       if (nameDisp) nameDisp.textContent = '첨부된 양식 없음 ([☁️ 양식 다운로드 (구글 드라이브)] 후 1회 첨부해 주세요)';
     }
-    if (isAdminUnlocked && getGasWebAppUrl()) {
-      fetchPhotoLogsFromGoogleSheet(false);
-    }
   }
 
   function loadExcelTemplate(event) {
@@ -1015,7 +925,7 @@
   }
 
   // =========================================================================
-  // 구글 스프레드시트 ([사진대지] 시트 탭) 사용자별 생성 로그 실시간 기록 및 조회
+  // 구글 스프레드시트 ([사진대지] 시트 탭) 사용자별 생성 로그 단방향 실시간 전송 (관리자 패널 내 로그 비표시)
   // =========================================================================
   function formatPhotoLogTimestamp(dateObj) {
     const y = dateObj.getFullYear();
@@ -1027,76 +937,8 @@
     return `${y}-${m}-${d} ${hh}:${mm}:${ss}`;
   }
 
-  function getLocalPhotoLogs() {
-    try {
-      const raw = localStorage.getItem(PHOTO_LOG_KEY);
-      if (!raw) return [];
-      const parsed = JSON.parse(raw);
-      return Array.isArray(parsed) ? parsed : [];
-    } catch (e) {
-      return [];
-    }
-  }
-
-  function formatDisplayPhotoTimestamp(rawVal) {
-    if (!rawVal || rawVal === '-') return '-';
-    const str = String(rawVal).trim();
-    if (/^\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2}$/.test(str)) return str;
-    const parsed = new Date(str);
-    if (!isNaN(parsed.getTime())) {
-      return formatPhotoLogTimestamp(parsed);
-    }
-    return str;
-  }
-
-  function getMergedPhotoLogs() {
-    const localLogs = getLocalPhotoLogs().map(item => ({
-      appType: item.appType || '현장 사진대지 (GitHub ver 1.2.7)',
-      timestamp: formatDisplayPhotoTimestamp(item.timestamp),
-      docNo: item.docNo || '-',
-      inspector: item.inspector || '-',
-      detail: item.detail || '-',
-      device: item.device || 'PC',
-      source: item.source || '로컬 브라우저'
-    }));
-    const cloudLogs = (cloudPhotoLogs || []).map(item => {
-      const isNewOrder = String(item.timestamp || '').includes('사진대지') || String(item.timestamp || '').includes('ver');
-      if (isNewOrder) {
-        return {
-          appType: item.timestamp || '현장 사진대지 (GitHub ver 1.2.7)',
-          timestamp: formatDisplayPhotoTimestamp(item.appType),
-          docNo: item.docNo || '-',
-          inspector: item.inspector || '-',
-          detail: item.detail || '-',
-          device: item.device || 'PC',
-          source: '☁️ 구글 시트(사진대지)'
-        };
-      }
-      return {
-        appType: item.appType || '현장 사진대지 (GitHub ver 1.2.7)',
-        timestamp: formatDisplayPhotoTimestamp(item.timestamp),
-        docNo: item.docNo || '-',
-        inspector: item.inspector || '-',
-        detail: item.detail || '-',
-        device: item.device || 'PC',
-        source: '☁️ 구글 시트(사진대지)'
-      };
-    });
-
-    const seen = new Set();
-    const merged = [];
-    for (const log of [...cloudLogs, ...localLogs]) {
-      const key = `${log.timestamp}|${log.docNo}|${log.detail}`;
-      if (!seen.has(key)) {
-        seen.add(key);
-        merged.push(log);
-      }
-    }
-    merged.sort((a, b) => String(b.timestamp).localeCompare(String(a.timestamp)));
-    return merged;
-  }
-
   async function saveAndTestPhotoGasUrl() {
+    if (!isAdminUnlocked) return;
     const driveInput = document.getElementById('drivePhotoXlsxUrlInput');
     if (driveInput && driveInput.value.trim()) {
       localStorage.setItem(DRIVE_PHOTO_URL_STORAGE_KEY, driveInput.value.trim());
@@ -1107,7 +949,7 @@
     if (!rawUrl) {
       localStorage.removeItem(GAS_URL_STORAGE_KEY);
       if (badge) {
-        badge.textContent = '구글 시트 미연동 (로컬 저장 모드)';
+        badge.textContent = '구글 시트 연동 해제됨';
         badge.style.background = '#f1f5f9';
         badge.style.color = '#475569';
       }
@@ -1115,7 +957,12 @@
       return;
     }
     localStorage.setItem(GAS_URL_STORAGE_KEY, rawUrl);
-    await fetchPhotoLogsFromGoogleSheet(true);
+    if (badge) {
+      badge.textContent = '☁️ 구글 시트(사진대지 탭) 단방향 기록 활성화됨';
+      badge.style.background = '#dcfce7';
+      badge.style.color = '#166534';
+    }
+    alert('구글 클라우드 연동 주소가 저장되었습니다.');
   }
 
   async function sendPhotoLogToGoogleSheet(entry) {
@@ -1134,46 +981,13 @@
         detail: entry.detail || '-',
         device: entry.device || 'PC'
       };
-      const res = await fetch(gasUrl, {
+      await fetch(gasUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify(payload)
       });
-      const data = await res.json().catch(() => null);
-      if (data && data.ok && isAdminUnlocked) {
-        fetchPhotoLogsFromGoogleSheet(false);
-      }
     } catch (err) {
       console.warn('구글 시트(사진대지 탭) 로그 전송 실패:', err);
-    }
-  }
-
-  async function fetchPhotoLogsFromGoogleSheet(showAlert) {
-    const gasUrl = getGasWebAppUrl();
-    if (!gasUrl) return;
-    try {
-      const sep = gasUrl.includes('?') ? '&' : '?';
-      const res = await fetch(`${gasUrl}${sep}action=getLogs&sheet=${encodeURIComponent('사진대지')}&auth=${ADMIN_PASS_HASH}`, { method: 'GET' });
-      const data = await res.json();
-      if (data && data.ok && Array.isArray(data.logs)) {
-        // sheet 파라미터 지원 시 해당 시트 로그, 미지원 시 사진대지 구분만 필터링
-        cloudPhotoLogs = data.logs.filter(r => !r.appType || String(r.appType).includes('사진대지') || String(r.timestamp || '').includes('사진대지'));
-        const badge = document.getElementById('gasConnectionBadge');
-        if (badge) {
-          badge.textContent = `☁️ 구글 시트(사진대지 탭) 연동됨 (${cloudPhotoLogs.length}건)`;
-          badge.style.background = '#dcfce7';
-          badge.style.color = '#166534';
-        }
-        renderPhotoLogs();
-        if (showAlert) {
-          alert(`구글 스프레드시트 [사진대지] 시트와 연동 확인 완료! (현재 기록된 로그: 총 ${cloudPhotoLogs.length}건)`);
-        }
-      }
-    } catch (err) {
-      console.warn('구글 시트 사진대지 로그 조회 실패:', err);
-      if (showAlert) {
-        alert('구글 시트 로그 조회 중 오류가 발생했습니다. 웹앱 URL을 확인해 주세요.');
-      }
     }
   }
 
@@ -1196,7 +1010,6 @@
 
   function recordPhotoLog(projectName, photoCount, summaryText, blankCount) {
     try {
-      const logs = getLocalPhotoLogs();
       const totalSlots = photoCount + (blankCount || 0);
       const countText = blankCount > 0
         ? `사진 ${photoCount}장+공란 ${blankCount}칸 (${Math.ceil(totalSlots / 2)}p)`
@@ -1207,101 +1020,13 @@
         docNo: projectName || '현장 사진대지',
         inspector: countText,
         detail: summaryText || '-',
-        device: getDeviceLabelWithId(),
-        source: getGasWebAppUrl() ? '☁️ 구글 시트 전송' : '로컬 브라우저'
+        device: getDeviceLabelWithId()
       };
-      logs.unshift(entry);
-      if (logs.length > 1000) logs.length = 1000;
-      localStorage.setItem(PHOTO_LOG_KEY, JSON.stringify(logs));
-      renderPhotoLogs();
+      try { localStorage.removeItem(PHOTO_LOG_KEY); } catch (e) {}
       sendPhotoLogToGoogleSheet(entry);
     } catch (e) {
-      console.warn('사진대지 로그 저장 오류:', e);
+      console.warn('사진대지 로그 전송 오류:', e);
     }
-  }
-
-  function renderPhotoLogs() {
-    const tbody = document.getElementById('photoLogTableBody');
-    const countBadge = document.getElementById('photoLogCountBadge');
-    if (!tbody) return;
-
-    const logs = getMergedPhotoLogs();
-    if (countBadge) {
-      countBadge.textContent = `총 ${logs.length}건 기록됨 (구글시트 ${cloudPhotoLogs.length}건)`;
-    }
-
-    if (logs.length === 0) {
-      tbody.innerHTML = `
-        <tr>
-          <td colspan="8" style="text-align: center; color: #64748b; padding: 14px;">아직 생성된 사진대지 로그 기록이 없습니다.</td>
-        </tr>
-      `;
-      return;
-    }
-
-    tbody.innerHTML = logs.map((item, idx) => `
-      <tr style="border-bottom: 1px solid #e2e8f0;">
-        <td style="text-align: center; padding: 6px 7px; color: #475569; font-weight: 700;">${logs.length - idx}</td>
-        <td style="padding: 6px 7px; color: #334155; font-weight: 600;">${item.appType || '-'}</td>
-        <td style="padding: 6px 7px; color: #0f172a; font-family: monospace; font-size: 0.8rem;">${item.timestamp || '-'}</td>
-        <td style="padding: 6px 7px; color: #1e40af; font-weight: 700;">${item.docNo || '-'}</td>
-        <td style="padding: 6px 7px; color: #0f172a; font-weight: 600;">${item.inspector || '-'}</td>
-        <td style="padding: 6px 7px; color: #334155;">${item.detail || '-'}</td>
-        <td style="text-align: center; padding: 6px 7px; color: #475569; font-weight: 600;">${item.device || 'PC'}</td>
-        <td style="text-align: center; padding: 6px 7px; font-size: 0.74rem; font-weight: 700; color: ${String(item.source).includes('구글') ? '#15803d' : '#1e40af'};">${item.source || '로컬'}</td>
-      </tr>
-    `).join('');
-  }
-
-  function togglePhotoLogPanel() {
-    const panel = document.getElementById('photoLogPanelContent');
-    const btn = document.getElementById('togglePhotoLogBtn');
-    if (!panel) return;
-    const isHidden = panel.style.display === 'none' || !panel.style.display;
-    if (isHidden) {
-      panel.style.display = 'block';
-      if (btn) btn.textContent = '로그 닫기';
-      renderPhotoLogs();
-      if (getGasWebAppUrl()) {
-        fetchPhotoLogsFromGoogleSheet(false);
-      }
-    } else {
-      panel.style.display = 'none';
-      if (btn) btn.textContent = '로그';
-    }
-  }
-
-  function exportPhotoLogsCsv() {
-    const logs = getMergedPhotoLogs();
-    if (logs.length === 0) {
-      alert('다운로드할 사진대지 생성 로그가 없습니다.');
-      return;
-    }
-    const header = ['순번', '프로그램 구분(버전정보)', '기록일시(년월일시분초)', '현장 공사명', '출력 건수', '첫 사진 공종·내용 요약', '접속기기', '저장 구분'];
-    const rows = logs.map((item, idx) => [
-      logs.length - idx,
-      `"${(item.appType || '').replace(/"/g, '""')}"`,
-      `"${(item.timestamp || '').replace(/"/g, '""')}"`,
-      `"${(item.docNo || '').replace(/"/g, '""')}"`,
-      `"${(item.inspector || '').replace(/"/g, '""')}"`,
-      `"${(item.detail || '').replace(/"/g, '""')}"`,
-      `"${(item.device || 'PC').replace(/"/g, '""')}"`,
-      `"${(item.source || '로컬').replace(/"/g, '""')}"`
-    ]);
-    const csvContent = '\uFEFF' + [header.join(','), ...rows.map(r => r.join(','))].join('\r\n');
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    saveAs(blob, `현장_사진대지생성로그_${todayStr}.csv`);
-  }
-
-  function clearPhotoLogs() {
-    const logs = getLocalPhotoLogs();
-    if (logs.length === 0) {
-      alert('초기화할 로컬 로그가 없습니다.');
-      return;
-    }
-    if (!confirm(`이 브라우저에 기록된 로컬 사진대지 로그(총 ${logs.length}건)를 초기화하시겠습니까?\n(구글 시트에 저장된 로그는 유지됩니다.)`)) return;
-    localStorage.removeItem(PHOTO_LOG_KEY);
-    renderPhotoLogs();
   }
 
   // =========================================================================
@@ -1389,13 +1114,21 @@
     return true;
   }
 
+  function enforceAdminPanelLock() {
+    const card = document.getElementById('settingsCard');
+    if (!card) return;
+    const observer = new MutationObserver(() => {
+      if (!isAdminUnlocked && card.style.display !== 'none') {
+        card.style.display = 'none';
+      }
+    });
+    observer.observe(card, { attributes: true, attributeFilter: ['style', 'class'] });
+  }
+
   function openAdminSettings() {
     const card = document.getElementById('settingsCard');
-    renderPhotoLogs();
     if (isAdminUnlocked) {
-      if (getGasWebAppUrl()) {
-        fetchPhotoLogsFromGoogleSheet(false);
-      }
+      populateAdminCloudInputs();
       card.style.display = card.style.display === 'none' ? 'block' : 'none';
       return;
     }
@@ -1438,9 +1171,7 @@
       isAdminUnlocked = true;
       adminFailCount = 0;
       closeAdminAuthModal();
-      if (getGasWebAppUrl()) {
-        fetchPhotoLogsFromGoogleSheet(false);
-      }
+      populateAdminCloudInputs();
       if (card) {
         card.style.display = 'block';
         card.scrollIntoView({ behavior: 'smooth' });
@@ -2471,6 +2202,8 @@
     }
   }
 
+  try { localStorage.removeItem(PHOTO_LOG_KEY); } catch (e) {}
+  enforceAdminPanelLock();
   verifyAuthorIntegrity();
   restoreLastProjectName();
   loadTemplateFromDB();
