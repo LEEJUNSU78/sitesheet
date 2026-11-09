@@ -967,6 +967,20 @@
     }
     const gasInput = document.getElementById('gasWebAppUrlInput');
     const rawUrl = (gasInput ? gasInput.value : '').trim();
+    if (typeof adminSyncChannel !== 'undefined' && adminSyncChannel) {
+      try {
+        adminSyncChannel.postMessage({
+          channel: ADMIN_SYNC_CHANNEL_NAME,
+          type: 'CLOUD_URL_UPDATE',
+          target: 'github_photo',
+          cloudUrls: {
+            drivePhotoXlsxUrl: driveInput ? driveInput.value.trim() : '',
+            gasWebAppUrl: rawUrl
+          },
+          timestamp: Date.now()
+        });
+      } catch (e) {}
+    }
     const badge = document.getElementById('gasConnectionBadge');
     if (!rawUrl) {
       localStorage.removeItem(GAS_URL_STORAGE_KEY);
