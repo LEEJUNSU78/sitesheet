@@ -553,6 +553,28 @@
         * 완성본 엑셀 다운로드 시마다 연결된 구글 스프레드시트 내 <strong>[사진대지]</strong> 시트 탭으로 생성 로그가 단방향 자동 전송됩니다. (보안을 위해 HTML 화면 내 로그 열람은 비활성화되어 있으며 구글 스프레드시트에서만 확인 가능합니다.)
       </div>
     </div>
+
+    <!-- 엑셀 셀 좌표값 실시간 설정 및 통합 관리자 패널 연동 헤더 -->
+    <div style="margin-bottom: 12px; background: #ffffff; padding: 12px 14px; border-radius: 8px; border: 2px solid #0f766e; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+      <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+        <span style="font-size: 0.9rem; font-weight: 800; color: #0f766e;">
+          📐 사진대지 엑셀 셀 좌표값 실시간 설정 (수정 즉시 자동 저장 · 통합 관리자 패널 실시간 연동)
+        </span>
+        <span class="badge" id="coordSyncStatusBadge" style="background: #dcfce7; color: #166534; border: 1px solid #86efac;">🟢 실시간 연동 활성화됨</span>
+      </div>
+      <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+        <button type="button" class="batch-btn" style="padding: 4px 12px; font-size: 0.78rem; background: #0f172a; color: #ffffff; border-color: #0f172a;" onclick="window.open('../통합_관리자_패널.html', '_blank')">
+          🎛️ 3종 통합 관리자 패널 열기
+        </button>
+        <button type="button" class="batch-btn" style="padding: 4px 12px; font-size: 0.78rem; background: #0f766e; color: #ffffff; border-color: #0f766e;" onclick="saveAdminCoordinates(true)">
+          💾 엑셀 좌표값 저장 · 즉시 적용
+        </button>
+        <button type="button" class="batch-btn" style="padding: 4px 12px; font-size: 0.78rem; background: #fff1f2; color: #be123c; border-color: #fecdd3;" onclick="resetAdminCoordinates()">
+          ↺ 좌표 기본값 초기화
+        </button>
+      </div>
+    </div>
+
     <div class="grid-settings">
       <div class="form-group">
         <label>대상 시트명</label>
@@ -2202,8 +2224,167 @@
     }
   }
 
+  // =========================================================================
+  // 사진대지 엑셀 셀 좌표값 영구 저장 및 [통합 관리자 패널] 실시간 양방향 동기화 엔진
+  // =========================================================================
+  const ADMIN_COORD_STORAGE_KEY = 'suya_admin_coord_github_photo_v1';
+  const ADMIN_SYNC_CHANNEL_NAME = 'suya_admin_realtime_channel_v1';
+  const DEFAULT_PHOTO_COORDS = {
+    targetSheetName: '사진대지',
+    insertMode: 'cellFit',
+    colEnd: 'I',
+    p1Start: 'B6',
+    p1Proj: 'D27',
+    p1Date: 'H27',
+    p1Content: 'D28',
+    p1Work: 'H28',
+    p2Start: 'B31',
+    p2Proj: 'D51',
+    p2Date: 'H51',
+    p2Content: 'D52',
+    p2Work: 'H52',
+    pageOffset: '54'
+  };
+
+  let adminSyncChannel = null;
+  try {
+    if (typeof BroadcastChannel !== 'undefined') {
+      adminSyncChannel = new BroadcastChannel(ADMIN_SYNC_CHANNEL_NAME);
+    }
+  } catch (e) {}
+
+  function collectCurrentAdminCoordinates() {
+    const data = {};
+    Object.keys(DEFAULT_PHOTO_COORDS).forEach(id => {
+      const el = document.getElementById(id);
+      data[id] = el ? ((el.value || '').trim() || DEFAULT_PHOTO_COORDS[id]) : DEFAULT_PHOTO_COORDS[id];
+    });
+    return data;
+  }
+
+  function applyAdminCoordinatesToDom(coordObj, showBadgePulse) {
+    if (!coordObj || typeof coordObj !== 'object') return;
+    Object.keys(DEFAULT_PHOTO_COORDS).forEach(id => {
+      if (coordObj[id] === undefined) return;
+      const el = document.getElementById(id);
+      if (el) el.value = String(coordObj[id]);
+    });
+    if (showBadgePulse) {
+      const badge = document.getElementById('coordSyncStatusBadge');
+      if (badge) {
+        const nowStr = new Date().toTimeString().split(' ')[0];
+        badge.textContent = `⚡ 통합 패널 실시간 반영됨 (${nowStr})`;
+        badge.style.background = '#dbeafe';
+        badge.style.color = '#1e40af';
+      }
+    }
+  }
+
+  function saveAdminCoordinates(showAlert) {
+    const coords = collectCurrentAdminCoordinates();
+    try {
+      localStorage.setItem(ADMIN_COORD_STORAGE_KEY, JSON.stringify(coords));
+    } catch (e) {}
+    if (adminSyncChannel) {
+      try {
+        adminSyncChannel.postMessage({
+          type: 'COORD_UPDATE',
+          target: 'github_photo',
+          coords: coords,
+          timestamp: Date.now()
+        });
+      } catch (e) {}
+    }
+    const badge = document.getElementById('coordSyncStatusBadge');
+    if (badge) {
+      const nowStr = new Date().toTimeString().split(' ')[0];
+      badge.textContent = `🟢 좌표 자동 저장·연동됨 (${nowStr})`;
+      badge.style.background = '#dcfce7';
+      badge.style.color = '#166534';
+    }
+    if (showAlert) {
+      alert('사진대지 엑셀 셀 좌표 설정이 저장되어 실시간으로 반영되었습니다.');
+    }
+  }
+
+  function resetAdminCoordinates() {
+    if (!confirm('사진대지 엑셀 셀 좌표 설정을 모두 초기 기본값으로 복원하시겠습니까?')) return;
+    applyAdminCoordinatesToDom(DEFAULT_PHOTO_COORDS, true);
+    saveAdminCoordinates(false);
+    alert('사진대지 엑셀 셀 좌표값이 기본값으로 복원되었습니다.');
+  }
+
+  function initAdminCoordRealtimeSync() {
+    try {
+      const raw = localStorage.getItem(ADMIN_COORD_STORAGE_KEY);
+      if (raw) {
+        applyAdminCoordinatesToDom(JSON.parse(raw), false);
+      }
+    } catch (e) {}
+
+    Object.keys(DEFAULT_PHOTO_COORDS).forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const evtName = el.tagName === 'SELECT' ? 'change' : 'input';
+      el.addEventListener(evtName, () => saveAdminCoordinates(false));
+    });
+
+    if (adminSyncChannel) {
+      adminSyncChannel.onmessage = (ev) => {
+        const msg = ev.data;
+        if (!msg || typeof msg !== 'object') return;
+        if ((msg.target === 'github_photo' || msg.target === 'all' || msg.target === 'all_photos') && msg.coords) {
+          applyAdminCoordinatesToDom(msg.coords, true);
+          try {
+            const merged = Object.assign({}, collectCurrentAdminCoordinates(), msg.coords);
+            localStorage.setItem(ADMIN_COORD_STORAGE_KEY, JSON.stringify(merged));
+          } catch (e) {}
+        }
+        if ((msg.target === 'github_photo' || msg.target === 'all') && msg.cloudUrls) {
+          if (msg.cloudUrls.drivePhotoXlsxUrl !== undefined) {
+            localStorage.setItem(DRIVE_PHOTO_URL_STORAGE_KEY, msg.cloudUrls.drivePhotoXlsxUrl);
+            if (isAdminUnlocked && document.getElementById('drivePhotoXlsxUrlInput')) {
+              document.getElementById('drivePhotoXlsxUrlInput').value = msg.cloudUrls.drivePhotoXlsxUrl;
+            }
+          }
+          if (msg.cloudUrls.gasWebAppUrl !== undefined) {
+            localStorage.setItem(GAS_URL_STORAGE_KEY, msg.cloudUrls.gasWebAppUrl);
+            if (isAdminUnlocked && document.getElementById('gasWebAppUrlInput')) {
+              document.getElementById('gasWebAppUrlInput').value = msg.cloudUrls.gasWebAppUrl;
+            }
+          }
+        }
+      };
+    }
+
+    window.addEventListener('storage', (e) => {
+      if (e.key === ADMIN_COORD_STORAGE_KEY && e.newValue) {
+        try {
+          applyAdminCoordinatesToDom(JSON.parse(e.newValue), true);
+        } catch (err) {}
+      } else if (e.key === DRIVE_PHOTO_URL_STORAGE_KEY && isAdminUnlocked && document.getElementById('drivePhotoXlsxUrlInput')) {
+        document.getElementById('drivePhotoXlsxUrlInput').value = e.newValue || '';
+      } else if (e.key === GAS_URL_STORAGE_KEY && isAdminUnlocked && document.getElementById('gasWebAppUrlInput')) {
+        document.getElementById('gasWebAppUrlInput').value = e.newValue || '';
+      }
+    });
+
+    window.addEventListener('message', (ev) => {
+      const msg = ev.data;
+      if (!msg || typeof msg !== 'object' || msg.channel !== ADMIN_SYNC_CHANNEL_NAME) return;
+      if ((msg.target === 'github_photo' || msg.target === 'all' || msg.target === 'all_photos') && msg.coords) {
+        applyAdminCoordinatesToDom(msg.coords, true);
+        try {
+          const merged = Object.assign({}, collectCurrentAdminCoordinates(), msg.coords);
+          localStorage.setItem(ADMIN_COORD_STORAGE_KEY, JSON.stringify(merged));
+        } catch (e) {}
+      }
+    });
+  }
+
   try { localStorage.removeItem(PHOTO_LOG_KEY); } catch (e) {}
   enforceAdminPanelLock();
+  initAdminCoordRealtimeSync();
   verifyAuthorIntegrity();
   restoreLastProjectName();
   loadTemplateFromDB();
